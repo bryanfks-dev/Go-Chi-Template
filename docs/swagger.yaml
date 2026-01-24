@@ -1,0 +1,72 @@
+definitions:
+  skeleton_pkg_data_dto.ErrorDto:
+    properties:
+      message:
+        type: string
+    type: object
+  skeleton_pkg_data_dto.ErrorHTTPResponse:
+    properties:
+      error:
+        $ref: '#/definitions/skeleton_pkg_data_dto.ErrorDto'
+      success:
+        example: false
+        type: boolean
+    type: object
+  skeleton_pkg_data_dto.MetaDto:
+    properties:
+      page:
+        type: integer
+      size_per_page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  skeleton_pkg_data_dto.SuccessHTTPResponse-any:
+    properties:
+      data: {}
+      meta:
+        $ref: '#/definitions/skeleton_pkg_data_dto.MetaDto'
+      success:
+        example: true
+        type: boolean
+    type: object
+info:
+  contact: {}
+  title: Skeleton API
+  version: "1.0"
+paths:
+  /api/coba:
+    get:
+      description: Endpoint to list example items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.SuccessHTTPResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+      summary: List Example Endpoint
+      tags:
+      - API / Coba
+  /public/health:
+    get:
+      description: Endpoint to check the health of the service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.SuccessHTTPResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+      summary: Health Check
+      tags:
+      - Public API / Etc
+swagger: "2.0"

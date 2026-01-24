@@ -1,0 +1,13 @@
+server:
+  port: 8080
+logging:
+  level: info
+database:
+  master:
+    host: localhost
+    port: 5432
+    username: prod_user
+    password: prod_password
+    name: prod_db
+timezone:
+  location: Asia/Jakarta

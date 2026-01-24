@@ -1,0 +1,5 @@
+package {{ .APIName | toLower }}domain
+
+var (
+	Err{{ .APIName | toTitle }}NotFound = "{{ .APIName | toTitle }} not found"
+)

@@ -1,0 +1,11 @@
+package {{ .APIName | toLower }}delivery
+
+type {{ .APIName | toTitle }}Handler struct{
+	// Add any dependencies here
+}
+
+func New{{ .APIName | toTitle }}Handler() {{ .APIName | toTitle }}Handler {
+	return {{ .APIName | toTitle }}Handler{
+		// Initialize dependencies here
+	}
+}

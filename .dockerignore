@@ -1,0 +1,10 @@
+development.yaml
+test/
+*.log
+*.tmp
+.*
+README.md
+**/*/README.md
+tmp/
+lefthook.yml
+docs/

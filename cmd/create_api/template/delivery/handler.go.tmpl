@@ -1,0 +1,27 @@
+package {{ .APIName | toLower }}delivery
+
+import (
+	"net/http"
+	basedto "skeleton/pkg/data/dto"
+	"skeleton/pkg/utils"
+
+	_ "skeleton/docs"
+)
+
+
+// @Summary List Example Endpoint
+// @Description Endpoint to list example items
+// @Tags API / {{ .APIName | toTitle }}
+// @Produce json
+// @Router /api/{{ .APIName | toLower }} [get]
+// @Success 200 {object} basedto.SuccessHTTPResponse[any]
+// @Failure 500 {object} basedto.ErrorHTTPResponse
+func (h *{{ .APIName | toTitle }}Handler) ListExample(w http.ResponseWriter, r *http.Request) {
+	// Implementation here
+
+	utils.WriteSuccessJSONResponse(
+		w,
+		http.StatusOK,
+		basedto.NewSuccessHTTPResponse(nil, nil),
+	)
+}

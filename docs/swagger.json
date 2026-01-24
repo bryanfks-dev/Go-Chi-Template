@@ -1,0 +1,111 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Skeleton API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/coba": {
+            "get": {
+                "description": "Endpoint to list example items",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API / Coba"
+                ],
+                "summary": "List Example Endpoint",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.SuccessHTTPResponse-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/public/health": {
+            "get": {
+                "description": "Endpoint to check the health of the service",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Public API / Etc"
+                ],
+                "summary": "Health Check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.SuccessHTTPResponse-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "skeleton_pkg_data_dto.ErrorDto": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "skeleton_pkg_data_dto.ErrorHTTPResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorDto"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "skeleton_pkg_data_dto.MetaDto": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "size_per_page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "skeleton_pkg_data_dto.SuccessHTTPResponse-any": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "meta": {
+                    "$ref": "#/definitions/skeleton_pkg_data_dto.MetaDto"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        }
+    }
+}
