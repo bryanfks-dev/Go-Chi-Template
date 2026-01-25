@@ -47,4 +47,5 @@ pre-commit:
       run: go vet {staged_files} --localid '_.*'
       glob: "*.go"
     - name: "Formatting"
-      run: go fmt {staged_files}
+      run: gofmt -w {staged_files}
+      glob: "*.go"
