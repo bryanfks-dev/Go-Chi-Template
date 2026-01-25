@@ -44,7 +44,7 @@
 pre-commit:
   jobs:
     - name: "Linting"
-      run: go vet {staged_files} --localid '_.*'
+      run: go vet ./...
       glob: "*.go"
     - name: "Formatting"
       run: gofmt -w {staged_files}
