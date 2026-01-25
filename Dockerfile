@@ -3,7 +3,8 @@ ARG MAIN_GO_FILE=cmd/http/main.go
 ARG APP_ENVIRONMENT=production
 
 ARG OS=alpine
-ARG USERNAME=golang
+ARG USER_GROUP=golang
+ARG USER_NAME=appuser
 
 FROM golang:${GO_VERSION}-${OS} AS builder
 
@@ -21,13 +22,15 @@ RUN GOOS=linux CGO_ENABLED=0 GOARCH=amd64 \
 FROM ${OS}:latest AS runtime
 
 # Create a non-root user to run the application
-RUN addgroup --gid 1001 --system ${USERNAME} && \
-    adduser --system --uid 1001 --ingroup ${USERNAME} appuser
+RUN addgroup --gid 1001 --system ${USER_GROUP} && \
+    adduser --system --uid 1001 --ingroup ${USER_GROUP} ${USER_NAME}
 
 WORKDIR /app
 
 ENV APP_ENVIRONMENT=${APP_ENVIRONMENT}
 
-COPY --from=builder --chown=appuser:${USERNAME} /app/main .
+COPY --from=builder --chown=${USER_NAMe}:${USER_GROUP} /app/main .
+
+USER ${USER_NAME}
 
 CMD ["./main"]

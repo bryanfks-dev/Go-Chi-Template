@@ -8,7 +8,6 @@ import (
 	_ "skeleton/docs"
 )
 
-
 // @Summary List User Endpoint
 // @Description Endpoint to list example items
 // @Tags API / User

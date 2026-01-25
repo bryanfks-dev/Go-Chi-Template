@@ -1,6 +1,6 @@
 package userdelivery
 
-type UserHandler struct{
+type UserHandler struct {
 	// Add any dependencies here
 }
 
