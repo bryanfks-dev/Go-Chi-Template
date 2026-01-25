@@ -11,7 +11,7 @@ echo "Setting module name to: $MODULE_NAME..."
 go mod edit -module $MODULE_NAME
 if [ "$OS" == "Darwin" ]; then
     find . -type f -name "*.go" -print0 | xargs -0 sed -i '' "s/skeleton/$MODULE_NAME/g"
-elif [ "$OS" == "Linux" ]; then
+else
     find . -type f -name "*.go" -print0 | xargs -0 sed -i "s/skeleton/$MODULE_NAME/g"
 fi
 
