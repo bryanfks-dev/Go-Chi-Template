@@ -1,0 +1,11 @@
+package {{ .DomainName | toLower }}usecase
+
+type {{ .DomainName | toTitle }}Usecase struct {
+	// Add dependencies here
+}
+
+func New{{ .DomainName | toTitle }}Usecase() *{{ .DomainName | toTitle }}Usecase {
+	return &{{ .DomainName | toTitle }}Usecase{
+		// Initialize dependencies here
+	}
+}

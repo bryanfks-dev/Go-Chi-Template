@@ -1,5 +1,5 @@
 // Function to start the HTTP server
-// Usage: go run cmd/http/main.go
+// Usage: go run ./cmd/http
 
 package main
 
@@ -24,6 +24,11 @@ const (
 // @Version 1.0
 func main() {
 	app := application.NewApplication()
+	app.Database.Migrate()
+	defer func() {
+		app.Logger.Info("Executing post shutdown tasks...")
+		app.CleanUp()
+	}()
 
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),

@@ -13,25 +13,23 @@ type Config struct {
 	Timezone TimezoneProperties `yaml:"timezone"`
 }
 
-var configFilePath = map[Environment]string{
+var cfgFilePath = map[Environment]string{
 	EnvironmentDevelopment: "development.yaml",
 	EnvironmentProduction:  "production.yaml",
 }
 
-func getConfigFilePath(environment Environment) string {
-	fallback := configFilePath[EnvironmentDevelopment]
-	path, exists := configFilePath[environment]
-
-	if exists {
-		return path
+func getConfigFilePath(env Environment) string {
+	val, ok := cfgFilePath[env]
+	if !ok {
+		return cfgFilePath[EnvironmentDevelopment]
 	}
-	return fallback
+	return val
 }
 
-func NewConfig(environment Environment) *Config {
+func NewConfig(env Environment) *Config {
 	config := &Config{}
 
-	configFilePath := getConfigFilePath(environment)
+	configFilePath := getConfigFilePath(env)
 	configFile, err := os.Open(configFilePath)
 	if err != nil {
 		panic("Failed to open config file: " + err.Error())

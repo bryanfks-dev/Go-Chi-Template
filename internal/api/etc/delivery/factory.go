@@ -2,6 +2,6 @@ package etcdelivery
 
 type EtcHandler struct{}
 
-func NewEtcHandler() EtcHandler {
-	return EtcHandler{}
+func NewEtcHandler() *EtcHandler {
+	return &EtcHandler{}
 }

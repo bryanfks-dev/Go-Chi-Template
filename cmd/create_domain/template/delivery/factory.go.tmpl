@@ -1,0 +1,11 @@
+package {{ .DomainName | toLower }}delivery
+
+type {{ .DomainName | toTitle }}Handler struct{
+	// Add any dependencies here
+}
+
+func New{{ .DomainName | toTitle }}Handler() *{{ .DomainName | toTitle }}Handler {
+	return &{{ .DomainName | toTitle }}Handler{
+		// Initialize dependencies here
+	}
+}

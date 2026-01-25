@@ -1,0 +1,9 @@
+package {{ .DomainName | toLower }}dto
+
+type Post{{ .DomainName | toTitle }}sRequestDTO struct {
+	// Define your request DTO fields here
+}
+
+func NewPost{{ .DomainName | toTitle }}sRequestDTO() *Post{{ .DomainName | toTitle }}sRequestDTO {
+	return &Post{{ .DomainName | toTitle }}sRequestDTO{}
+}

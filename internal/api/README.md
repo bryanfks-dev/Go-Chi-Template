@@ -4,7 +4,10 @@
 
 This directory contains the implementation of the API layer for the Chi service. It defines the HTTP routes, handlers, and middleware used to process incoming requests and send responses.
 
-## Directories and Files
+## Concepts
+
+The API layer is build with DDD (Domain-Driven Design) principles in mind.
+Each component has a specific responsibility, promoting maintainability and scalability. It separates concerns into different components:
 
 - `route.go`: Defines the HTTP routes and associates them with their respective handlers.
 - `delivery/`: Contains the handler functions that process requests and generate responses.

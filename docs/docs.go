@@ -15,16 +15,16 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/coba": {
+        "/api/user": {
             "get": {
                 "description": "Endpoint to list example items",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "API / Coba"
+                    "API / User"
                 ],
-                "summary": "List Example Endpoint",
+                "summary": "List User Endpoint",
                 "responses": {
                     "200": {
                         "description": "OK",

@@ -1,0 +1,11 @@
+package {{ .DomainName | toLower }}api
+
+import (
+	{{ .DomainName | toLower }}delivery "skeleton/internal/api/{{ .DomainName | toLower }}/delivery"
+
+	"github.com/go-chi/chi/v5"
+)
+
+func RegisterRoutes(router chi.Router, {{ .DomainName | toLower }}Handler *{{ .DomainName | toLower }}delivery.{{ .DomainName | toTitle }}Handler) {
+	// Define your routes here
+}

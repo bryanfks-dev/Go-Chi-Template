@@ -1,0 +1,9 @@
+package {{ .DomainName | toLower }}dto
+
+type Get{{ .DomainName | toTitle }}sResponseDTO struct {
+	// Define your response DTO fields here
+}
+
+func NewGet{{ .DomainName | toTitle }}sResponseDTO() *Get{{ .DomainName | toTitle }}sResponseDTO {
+	return &Get{{ .DomainName | toTitle }}sResponseDTO{}
+}

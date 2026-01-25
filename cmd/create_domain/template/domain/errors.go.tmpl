@@ -1,0 +1,5 @@
+package {{ .DomainName | toLower }}domain
+
+var (
+	Err{{ .DomainName | toTitle }}NotFound = "{{ .DomainName | toTitle }} not found"
+)

@@ -2,19 +2,24 @@ package config
 
 import "os"
 
-type Environment string
+type Environment int
 
 const (
-	EnvironmentDevelopment Environment = "development"
-	EnvironmentProduction  Environment = "production"
+	EnvironmentDevelopment = iota
+	EnvironmentProduction
 )
 
-func LoadEnvironment() Environment {
-	fallback := EnvironmentDevelopment
-	environment := os.Getenv("APP_ENVIRONMENT")
+var environment = map[string]Environment{
+	"development": EnvironmentDevelopment,
+	"production":  EnvironmentProduction,
+}
 
-	if environment == "production" {
-		return EnvironmentProduction
+func LoadEnvironment() Environment {
+	appEnvironment := os.Getenv("APP_ENVIRONMENT")
+	val, ok := environment[appEnvironment]
+	if !ok {
+		return EnvironmentDevelopment
 	}
-	return fallback
+
+	return val
 }

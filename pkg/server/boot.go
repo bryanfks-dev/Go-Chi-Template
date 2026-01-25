@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"skeleton/pkg/config"
 )
 
 func (s *Server) Start() {
@@ -19,16 +18,8 @@ func (s *Server) Start() {
 
 func (s *Server) Shutdown(ctx context.Context) {
 	if err := s.server.Shutdown(ctx); err != nil {
-		panic("HTTP server forced to shutdown: " + err.Error())
+		s.logger.Error("HTTP server forced to shutdown: " + err.Error())
+		return
 	}
 	s.logger.Info("HTTP server stopped gracefully")
-
-	s.logger.Info("Executing post shutdown tasks")
-	if s.environment == config.EnvironmentProduction {
-		if err := s.logger.Sync(); err != nil {
-			panic("Failed to flush logs during shutdown: " + err.Error())
-		}
-	}
-
-	s.logger.Info("Graceful shutdown complete")
 }

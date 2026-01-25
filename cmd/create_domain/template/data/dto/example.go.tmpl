@@ -1,0 +1,9 @@
+package {{ .DomainName | toLower }}dto
+
+type {{ .DomainName | toTitle }}DTO struct {
+	// Define your DTO fields here
+}
+
+func New{{ .DomainName | toTitle }}DTO() *{{ .DomainName | toTitle }}DTO {
+	return &{{ .DomainName | toTitle }}DTO{}
+}

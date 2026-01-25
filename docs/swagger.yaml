@@ -35,7 +35,7 @@ info:
   title: Skeleton API
   version: "1.0"
 paths:
-  /api/coba:
+  /api/user:
     get:
       description: Endpoint to list example items
       produces:
@@ -49,9 +49,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
-      summary: List Example Endpoint
+      summary: List User Endpoint
       tags:
-      - API / Coba
+      - API / User
   /public/health:
     get:
       description: Endpoint to check the health of the service

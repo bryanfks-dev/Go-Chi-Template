@@ -1,0 +1,11 @@
+package {{ .DomainName | toLower }}repository
+
+type {{ .DomainName | toTitle }}Repository struct {
+	// Add dependencies here
+}
+
+func New{{ .DomainName | toTitle }}Repository() *{{ .DomainName | toTitle }}Repository {
+	return &{{ .DomainName | toTitle }}Repository{
+		// Initialize dependencies here
+	}
+}
