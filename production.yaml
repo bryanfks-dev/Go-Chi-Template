@@ -12,9 +12,13 @@ database:
     name: prod_db
     sslmode: disable
 bcrypt:
-  cost: 10
+  cost: 12
 jwt:
-  secret: verysecretkey
-  expiration_hours: 72
+  secret: production_secret_key
+  algorithm: HS256
+  access:
+    expiration_minutes: 15
+  refresh:
+    expiration_minutes: 43200
 timezone:
   location: Asia/Jakarta

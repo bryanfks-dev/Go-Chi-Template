@@ -48,21 +48,7 @@ func init() {
 	// userDescLastName is the schema descriptor for last_name field.
 	userDescLastName := userFields[1].Descriptor()
 	// user.LastNameValidator is a validator for the "last_name" field. It is called by the builders before save.
-	user.LastNameValidator = func() func(string) error {
-		validators := userDescLastName.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(last_name string) error {
-			for _, fn := range fns {
-				if err := fn(last_name); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	user.LastNameValidator = userDescLastName.Validators[0].(func(string) error)
 	// userDescEmail is the schema descriptor for email field.
 	userDescEmail := userFields[2].Descriptor()
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.

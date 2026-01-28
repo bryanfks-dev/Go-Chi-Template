@@ -14,7 +14,11 @@ database:
 bcrypt:
   cost: 10
 jwt:
-  secret: verysecretkey
-  expiration_hours: 72
+  secret: development_secret_key
+  algorithm: HS256
+  access:
+    expiration_minutes: 43200
+  refresh:
+    expiration_minutes: 43200
 timezone:
   location: Asia/Jakarta
