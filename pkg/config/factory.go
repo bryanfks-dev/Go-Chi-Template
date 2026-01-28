@@ -10,6 +10,8 @@ type Config struct {
 	Server   ServerProperties   `yaml:"server"`
 	Logging  LoggingProperties  `yaml:"logging"`
 	Database DatabaseProperties `yaml:"database"`
+	Bcrypt   BcryptProperties   `yaml:"bcrypt"`
+	JWT      JWTProperties      `yaml:"jwt"`
 	Timezone TimezoneProperties `yaml:"timezone"`
 }
 

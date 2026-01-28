@@ -1,11 +1,13 @@
 package userrepository
 
+import "skeleton/pkg/logger"
+
 type UserRepository struct {
-	// Add dependencies here
+	logger *logger.Logger
 }
 
-func NewUserRepository() *UserRepository {
+func NewUserRepository(logger *logger.Logger) *UserRepository {
 	return &UserRepository{
-		// Initialize dependencies here
+		logger: logger,
 	}
 }

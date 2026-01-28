@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"skeleton/di"
 	etcapi "skeleton/internal/api/etc"
-	etcdelivery "skeleton/internal/api/etc/delivery"
 	"skeleton/pkg/config"
-	basedto "skeleton/pkg/data/dto"
+	"skeleton/pkg/constant"
+	apperror "skeleton/pkg/error"
+	"skeleton/pkg/logger"
 	"skeleton/pkg/server"
 	"skeleton/pkg/utils"
 
@@ -15,25 +18,50 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-func _registerAPIRoutes(srv server.Server) {
+func _registerAPIRoutes(
+	srv *server.Server,
+	deliveryContainer *di.DeliveryContainer,
+) {
+	if srv == nil {
+		panic("srv cannot be nil")
+	}
+
+	if deliveryContainer == nil {
+		panic("deliveryContainer cannot be nil")
+	}
+
 	apiRouter := chi.NewRouter()
 	srv.Router.Mount("/api", apiRouter)
-
 }
 
-func _registerPublicRoutes(srv server.Server) {
+func _registerPublicRoutes(
+	srv *server.Server,
+	deliveryContainer *di.DeliveryContainer,
+) {
+	if srv == nil {
+		panic("srv cannot be nil")
+	}
+
+	if deliveryContainer == nil {
+		panic("deliveryContainer cannot be nil")
+	}
+
 	publicRouter := chi.NewRouter()
 	srv.Router.Mount("/public", publicRouter)
 
-	etcapi.RegisterRoutes(publicRouter, etcdelivery.NewEtcHandler())
+	etcapi.RegisterRoutes(publicRouter, deliveryContainer.EtcHandler)
 }
 
-func _registerErrorRoutes(srv server.Server) {
+func _registerErrorRoutes(srv *server.Server) {
+	if srv == nil {
+		panic("srv cannot be nil")
+	}
+
 	srv.Router.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		utils.WriteErrorJSONResponse(
 			w,
 			http.StatusNotFound,
-			basedto.NewErrorHTTPResponse("Route not found"),
+			apperror.ErrRouteNotFound,
 		)
 	})
 
@@ -41,18 +69,38 @@ func _registerErrorRoutes(srv server.Server) {
 		utils.WriteErrorJSONResponse(
 			w,
 			http.StatusMethodNotAllowed,
-			basedto.NewErrorHTTPResponse("Method not allowed"),
+			apperror.ErrMethodNotAllowed,
 		)
 	})
 }
 
-func registerRoutes(srv server.Server, env config.Environment) {
-	_registerAPIRoutes(srv)
-	_registerPublicRoutes(srv)
+func registerRoutes(
+	srv *server.Server,
+	logger *logger.Logger,
+	env config.Environment,
+) {
+	if srv == nil {
+		panic("srv cannot be nil")
+	}
+
+	if logger == nil {
+		panic("logger cannot be nil")
+	}
+
+	deliveryContainer := di.NewDeliveryContainer()
+	_registerAPIRoutes(srv, deliveryContainer)
+	_registerPublicRoutes(srv, deliveryContainer)
 	_registerErrorRoutes(srv)
 
 	if env == config.EnvironmentDevelopment {
-		srv.Router.Mount("/swagger/", httpSwagger.WrapHandler)
+		fmt := fmt.Sprintf(
+			"API Docs will be available at %s%s",
+			srv.Address(),
+			constant.APIDocsRoute,
+		)
+		logger.Info(fmt)
+
+		srv.Router.Mount(constant.APIDocsRoute, httpSwagger.WrapHandler)
 		srv.Router.Mount("/debug", middleware.Profiler())
 	}
 }

@@ -6,43 +6,44 @@ import (
 	basedto "skeleton/pkg/data/dto"
 )
 
-func WriteSuccessJSONResponse(
+func WriteJSONResponse(
 	w http.ResponseWriter,
 	statusCode int,
-	response *basedto.SuccessHTTPResponse[any],
+	response any,
 ) {
-	if statusCode < 200 || statusCode >= 300 {
-		panic("statusCode must be a success code (2xx)")
+	if response == nil {
+		panic("response cannot be nil")
 	}
 
 	w.WriteHeader(statusCode)
 	w.Header().Set("Content-Type", "application/json")
-
-	if response == nil {
-		return
-	}
 
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
+func WriteNoContentResponse(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusNoContent)
+}
+
 func WriteErrorJSONResponse(
 	w http.ResponseWriter,
 	statusCode int,
-	response *basedto.ErrorHTTPResponse,
+	err error,
 ) {
-	if statusCode < 400 || statusCode >= 600 {
-		panic("statusCode must be an error code (4xx or 5xx)")
+	if statusCode < 400 || statusCode > 599 {
+		panic("statusCode must be between 400 and 599")
+	}
+
+	if err == nil {
+		panic("err cannot be nil")
 	}
 
 	w.WriteHeader(statusCode)
 	w.Header().Set("Content-Type", "application/json")
 
-	if response == nil {
-		return
-	}
-
+	response := basedto.NewErrorHTTPResponse(err.Error())
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

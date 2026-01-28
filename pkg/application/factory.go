@@ -14,18 +14,18 @@ type Application struct {
 	Logger      *logger.Logger
 }
 
-func NewApplication() Application {
+func NewApplication() *Application {
 	env := config.LoadEnvironment()
 	cfg := config.NewConfig(env)
-	db := db.NewDatabase(cfg.Database)
+	db := db.NewDatabase(cfg.Database, cfg.Bcrypt)
 
 	timezone.SetupTimezone(cfg.Timezone)
 	logger := logger.NewLogger(env, cfg.Logging)
 
-	return Application{
+	return &Application{
 		Environment: &env,
 		Database:    db,
 		Config:      cfg,
-		Logger:      &logger,
+		Logger:      logger,
 	}
 }

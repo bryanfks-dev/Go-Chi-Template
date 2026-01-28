@@ -1,7 +1,7 @@
 package basedto
 
 type SuccessHTTPResponse[T any] struct {
-	Success bool     `json:"success" example:"true"`
+	Success bool     `json:"success"        example:"true"`
 	Meta    *MetaDto `json:"meta,omitempty"`
 	Data    T        `json:"data,omitempty"`
 }

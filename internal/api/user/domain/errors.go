@@ -1,5 +1,5 @@
 package userdomain
 
 var (
-	ErrUserNotFound = "User not found"
+	ErrUserNotFound = "USER_NOT_FOUND"
 )

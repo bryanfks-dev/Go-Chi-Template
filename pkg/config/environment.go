@@ -14,8 +14,10 @@ var environment = map[string]Environment{
 	"production":  EnvironmentProduction,
 }
 
+const AppEnvironmentKey = "APP_ENVIRONMENT"
+
 func LoadEnvironment() Environment {
-	appEnvironment := os.Getenv("APP_ENVIRONMENT")
+	appEnvironment := os.Getenv(AppEnvironmentKey)
 	val, ok := environment[appEnvironment]
 	if !ok {
 		return EnvironmentDevelopment

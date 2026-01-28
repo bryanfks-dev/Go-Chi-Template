@@ -16,12 +16,9 @@ import (
 // @Success 200 {object} basedto.SuccessHTTPResponse[any]
 // @Failure 500 {object} basedto.ErrorHTTPResponse
 func (eh *EtcHandler) HealthCheck(w http.ResponseWriter, r *http.Request) {
-	utils.WriteSuccessJSONResponse(
+	utils.WriteJSONResponse(
 		w,
 		http.StatusOK,
 		basedto.NewSuccessHTTPResponse(nil, nil),
 	)
-}
-
-func (eh *EtcHandler) ErrorTest(w http.ResponseWriter, r *http.Request) {
 }

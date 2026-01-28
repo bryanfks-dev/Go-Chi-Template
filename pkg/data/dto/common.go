@@ -1,11 +1,14 @@
 package basedto
 
 type ValidationError map[string]string
-
-type MetaDto struct {
+type Pagination struct {
 	Total       int64 `json:"total,omitempty"`
 	Page        int   `json:"page,omitempty"`
 	SizePerPage int   `json:"size_per_page,omitempty"`
+}
+
+type MetaDto struct {
+	*Pagination
 }
 
 type ErrorDto struct {

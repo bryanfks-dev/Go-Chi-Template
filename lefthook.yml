@@ -43,9 +43,12 @@
 
 pre-commit:
   jobs:
-    - name: "Linting"
+    - name: "Lint"
       run: go vet ./...
       glob: "*.go"
-    - name: "Formatting"
+    - name: "Format Code"
       run: gofmt -w {staged_files}
+      glob: "*.go"
+    - name: "Format Line"
+      run: go tool golines -m 80 -w {staged_files}
       glob: "*.go"

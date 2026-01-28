@@ -19,12 +19,19 @@ type CreateDomainInput struct {
 var funcMap = template.FuncMap{
 	"normalize":    utils.Normalize,
 	"toLower":      strings.ToLower,
+	"toUpper":      strings.ToUpper,
 	"toLowerKebab": utils.ToLowerKebab,
 	"toTitle":      utils.ToTitle,
 	"toCamel":      utils.ToCamel,
 }
 
 func main() {
+	if len(os.Args) < 2 {
+		panic(
+			"Domain name argument is required, Usage: go run ./cmd/create_domain <domain_name>",
+		)
+	}
+
 	DomainName := os.Args[1]
 	validateCreateDomainInput(
 		CreateDomainInput{
@@ -122,8 +129,8 @@ func createRepositoryLayerFiles(DomainName string) {
 		DomainName: DomainName,
 	}
 	createFileFromTemplate(
-		"cmd/create_domain/template/repository/postgres_example.go.tmpl",
-		"internal/api/"+DomainName+"/repository/postgres_example.go",
+		"cmd/create_domain/template/repository/postgres.go.tmpl",
+		"internal/api/"+DomainName+"/repository/postgres.go",
 		functionSchema,
 	)
 }

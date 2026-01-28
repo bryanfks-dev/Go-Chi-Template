@@ -39,7 +39,7 @@ func main() {
 
 	srv := server.NewServer(app.Config.Server, app.Logger, *app.Environment)
 	registerMiddlewares(srv, app.Logger, *app.Environment)
-	registerRoutes(srv, *app.Environment)
+	registerRoutes(srv, app.Logger, *app.Environment)
 
 	go srv.Start()
 	<-ctx.Done()

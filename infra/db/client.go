@@ -7,7 +7,7 @@ import (
 
 func GetDatabaseClient(driver DatabaseDriver, cfg any) *ent.Client {
 	if cfg == nil {
-		panic("Database configuration is nil")
+		panic("Database configuration cannot be nil")
 	}
 
 	switch driver {

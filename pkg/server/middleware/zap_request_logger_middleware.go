@@ -17,11 +17,11 @@ func ZapRequestLoggerMiddleware(
 			start := time.Now()
 
 			ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
-
 			next.ServeHTTP(ww, r)
 
-			format := fmt.Sprintf(
-				"%s \"%s %s %s\" %d %d %d \"%s\" %s",
+			timeDiff := time.Since(start)
+			fmt := fmt.Sprintf(
+				"%s \"%s %s %s\" %d %d %d \"%s\" (%s)",
 				r.RemoteAddr,
 				r.Method,
 				r.URL.Path,
@@ -30,9 +30,9 @@ func ZapRequestLoggerMiddleware(
 				r.ContentLength,
 				ww.BytesWritten(),
 				r.UserAgent(),
-				time.Since(start),
+				timeDiff,
 			)
-			logger.Info(format)
+			logger.Info(fmt)
 		})
 	}
 }

@@ -10,5 +10,11 @@ database:
     username: prod_user
     password: prod_password
     name: prod_db
+    sslmode: disable
+bcrypt:
+  cost: 10
+jwt:
+  secret: verysecretkey
+  expiration_hours: 72
 timezone:
   location: Asia/Jakarta

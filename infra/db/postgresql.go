@@ -10,12 +10,13 @@ import (
 
 func NewPostgreSQLDatabaseClient(cfg config.SQLDatabaseProperties) *ent.Client {
 	dsn := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Host,
 		cfg.Port,
 		cfg.Username,
 		cfg.Password,
 		cfg.Name,
+		cfg.SSLMode,
 	)
 	client, err := ent.Open(cfg.Driver, dsn)
 	if err != nil {

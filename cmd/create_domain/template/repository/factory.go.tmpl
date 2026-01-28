@@ -1,11 +1,15 @@
 package {{ .DomainName | toLower }}repository
 
+import "skeleton/pkg/logger"
+
 type {{ .DomainName | toTitle }}Repository struct {
-	// Add dependencies here
+	logger *logger.Logger
 }
 
-func New{{ .DomainName | toTitle }}Repository() *{{ .DomainName | toTitle }}Repository {
+func New{{ .DomainName | toTitle }}Repository(
+	logger *logger.Logger,
+) *{{ .DomainName | toTitle }}Repository {
 	return &{{ .DomainName | toTitle }}Repository{
-		// Initialize dependencies here
+		logger: logger,
 	}
 }

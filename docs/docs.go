@@ -15,32 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/user": {
-            "get": {
-                "description": "Endpoint to list example items",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "API / User"
-                ],
-                "summary": "List User Endpoint",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/skeleton_pkg_data_dto.SuccessHTTPResponse-any"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/public/health": {
             "get": {
                 "description": "Endpoint to check the health of the service",

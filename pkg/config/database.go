@@ -7,6 +7,7 @@ type SQLDatabaseProperties struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	Name     string `yaml:"name"`
+	SSLMode  string `yaml:"sslmode"`
 }
 
 type DatabaseProperties struct {

@@ -9,19 +9,14 @@ import (
 	"github.com/google/wire"
 )
 
-type DeliveryDependency struct {
+type DeliveryContainer struct {
 	EtcHandler *etcdelivery.EtcHandler
 }
 
-func NewDeliveryDependency(
-	etcHandler *etcdelivery.EtcHandler,
-) *DeliveryDependency {
-	return &DeliveryDependency{
-		EtcHandler: etcHandler,
-	}
-}
-
-func InitDeliveryDeps() *DeliveryDependency {
-	wire.Build(NewDeliveryDependency, etcdelivery.NewEtcHandler)
-	return &DeliveryDependency{}
+func NewDeliveryContainer() *DeliveryContainer {
+	wire.Build(
+		etcdelivery.NewEtcHandler,
+		wire.Struct(new(DeliveryContainer), "*"),
+	)
+	return &DeliveryContainer{}
 }

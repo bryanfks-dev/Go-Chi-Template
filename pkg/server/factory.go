@@ -21,11 +21,11 @@ func NewServer(
 	cfg config.ServerProperties,
 	logger *logger.Logger,
 	env config.Environment,
-) Server {
+) *Server {
 	addr := "0.0.0.0:" + strconv.Itoa(cfg.Port)
 	router := chi.NewRouter()
 
-	return Server{
+	return &Server{
 		logger: logger,
 		config: cfg,
 		Router: router,

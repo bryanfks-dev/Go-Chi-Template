@@ -1,4 +1,4 @@
-package schema
+package schemamixin
 
 import (
 	"entgo.io/ent"
@@ -13,7 +13,7 @@ type SoftDeleteMixin struct {
 // Fields of the SoftDeleteMixin.
 func (SoftDeleteMixin) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("deleted_at").Optional().Nillable().Default(nil),
+		field.Time("delete_time").Optional().Nillable().Default(nil),
 	}
 }
 

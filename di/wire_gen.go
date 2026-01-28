@@ -12,22 +12,16 @@ import (
 
 // Injectors from delivery_wire.go:
 
-func InitDeliveryDeps() *DeliveryDependency {
+func NewDeliveryContainer() *DeliveryContainer {
 	etcHandler := etcdelivery.NewEtcHandler()
-	deliveryDependency := NewDeliveryDependency(etcHandler)
-	return deliveryDependency
+	deliveryContainer := &DeliveryContainer{
+		EtcHandler: etcHandler,
+	}
+	return deliveryContainer
 }
 
 // delivery_wire.go:
 
-type DeliveryDependency struct {
+type DeliveryContainer struct {
 	EtcHandler *etcdelivery.EtcHandler
-}
-
-func NewDeliveryDependency(
-	etcHandler *etcdelivery.EtcHandler,
-) *DeliveryDependency {
-	return &DeliveryDependency{
-		EtcHandler: etcHandler,
-	}
 }

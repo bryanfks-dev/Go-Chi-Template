@@ -20,7 +20,7 @@ var loggerLevelMap = map[string]zapcore.Level{
 	"fatal": zap.FatalLevel,
 }
 
-func NewLogger(env config.Environment, cfg config.LoggingProperties) Logger {
+func NewLogger(env config.Environment, cfg config.LoggingProperties) *Logger {
 	var loggerConfig zap.Config
 	if env == config.EnvironmentProduction {
 		loggerConfig = zap.NewProductionConfig()
@@ -39,7 +39,7 @@ func NewLogger(env config.Environment, cfg config.LoggingProperties) Logger {
 		panic("Failed to initialize logger: " + err.Error())
 	}
 
-	return Logger{
+	return &Logger{
 		logger,
 	}
 }

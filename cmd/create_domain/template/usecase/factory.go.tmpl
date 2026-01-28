@@ -1,11 +1,15 @@
 package {{ .DomainName | toLower }}usecase
 
+import "skeleton/pkg/logger"
+
 type {{ .DomainName | toTitle }}Usecase struct {
-	// Add dependencies here
+	logger *logger.Logger
 }
 
-func New{{ .DomainName | toTitle }}Usecase() *{{ .DomainName | toTitle }}Usecase {
+func New{{ .DomainName | toTitle }}Usecase(
+	logger *logger.Logger,
+) *{{ .DomainName | toTitle }}Usecase {
 	return &{{ .DomainName | toTitle }}Usecase{
-		// Initialize dependencies here
+		logger: logger,
 	}
 }
