@@ -19,7 +19,7 @@ import (
 func (h *{{ .DomainName | toTitle }}Handler) List{{ .DomainName | toTitle }}(w http.ResponseWriter, r *http.Request) {
 	// Implementation here
 
-	utils.WriteSuccessJSONResponse(
+	utils.WriteJSONResponse(
 		w,
 		http.StatusOK,
 		basedto.NewSuccessHTTPResponse(nil, nil),
