@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func SetupTimezone(cfg config.TimezoneProperties) {
+func SetupTimezone(cfg *config.TimezoneProperties) {
 	location, err := time.LoadLocation(cfg.Location)
 	if err != nil {
 		panic("Failed to load timezone location: " + err.Error())

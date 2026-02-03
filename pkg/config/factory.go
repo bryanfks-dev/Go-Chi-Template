@@ -15,19 +15,6 @@ type Config struct {
 	Timezone TimezoneProperties `yaml:"timezone"`
 }
 
-var cfgFilePath = map[Environment]string{
-	EnvironmentDevelopment: "development.yaml",
-	EnvironmentProduction:  "production.yaml",
-}
-
-func getConfigFilePath(env Environment) string {
-	val, ok := cfgFilePath[env]
-	if !ok {
-		return cfgFilePath[EnvironmentDevelopment]
-	}
-	return val
-}
-
 func NewConfig(env Environment) *Config {
 	config := &Config{}
 
@@ -44,4 +31,12 @@ func NewConfig(env Environment) *Config {
 	}
 
 	return config
+}
+
+func getConfigFilePath(env Environment) string {
+	val, ok := CfgFilePath[env]
+	if !ok {
+		return CfgFilePath[EnvironmentDevelopment]
+	}
+	return val
 }

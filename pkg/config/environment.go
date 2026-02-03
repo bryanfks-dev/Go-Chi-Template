@@ -9,16 +9,9 @@ const (
 	EnvironmentProduction
 )
 
-var environment = map[string]Environment{
-	"development": EnvironmentDevelopment,
-	"production":  EnvironmentProduction,
-}
-
-const AppEnvironmentKey = "APP_ENVIRONMENT"
-
 func LoadEnvironment() Environment {
 	appEnvironment := os.Getenv(AppEnvironmentKey)
-	val, ok := environment[appEnvironment]
+	val, ok := EnvironmentValue[appEnvironment]
 	if !ok {
 		return EnvironmentDevelopment
 	}

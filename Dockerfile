@@ -29,7 +29,9 @@ WORKDIR /app
 
 ENV APP_ENVIRONMENT=${APP_ENVIRONMENT}
 
-COPY --from=builder --chown=${USER_NAMe}:${USER_GROUP} /app/main .
+COPY --from=builder --chown=${USER_NAME}:${USER_GROUP} /app/main .
+COPY --chown=${USER_NAME}:${USER_GROUP} \
+    files/config/${APP_ENVIRONMENT}.yaml ./files/config.yaml
 
 USER ${USER_NAME}
 

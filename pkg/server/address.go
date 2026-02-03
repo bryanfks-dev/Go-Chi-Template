@@ -1,5 +1,5 @@
 package server
 
 func (srv *Server) Address() string {
-	return srv.server.Addr
+	return "http://" + srv.server.Addr
 }

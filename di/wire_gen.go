@@ -7,15 +7,18 @@
 package di
 
 import (
+	"skeleton/internal/api/error/delivery"
 	"skeleton/internal/api/etc/delivery"
 )
 
 // Injectors from delivery_wire.go:
 
 func NewDeliveryContainer() *DeliveryContainer {
+	errorHandler := errordelivery.NewErrorHandler()
 	etcHandler := etcdelivery.NewEtcHandler()
 	deliveryContainer := &DeliveryContainer{
-		EtcHandler: etcHandler,
+		ErrorHandler: errorHandler,
+		EtcHandler:   etcHandler,
 	}
 	return deliveryContainer
 }
@@ -23,5 +26,6 @@ func NewDeliveryContainer() *DeliveryContainer {
 // delivery_wire.go:
 
 type DeliveryContainer struct {
-	EtcHandler *etcdelivery.EtcHandler
+	ErrorHandler *errordelivery.ErrorHandler
+	EtcHandler   *etcdelivery.EtcHandler
 }

@@ -10,7 +10,7 @@ import (
 	"skeleton/infra/ent/hook"
 )
 
-func NewHashUserPasswordHook(hashCost int) ent.Hook {
+func NewHashUserPasswordHook(security *security.Security) ent.Hook {
 	return hook.On(func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(
 			func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
@@ -20,7 +20,7 @@ func NewHashUserPasswordHook(hashCost int) ent.Hook {
 				}
 
 				if pwd, ok := uMutation.Password(); ok {
-					hashedPwd, err := security.HashPassword(pwd, hashCost)
+					hashedPwd, err := security.HashPassword(pwd)
 					if err != nil {
 						return nil, err
 					}

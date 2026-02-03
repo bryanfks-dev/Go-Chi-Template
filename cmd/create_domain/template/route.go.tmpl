@@ -6,6 +6,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func RegisterRoutes(router chi.Router, {{ .DomainName | toLower }}Handler *{{ .DomainName | toLower }}delivery.{{ .DomainName | toTitle }}Handler) {
+func RegisterRoutes(router *chi.Mux, {{ .DomainName | toLower }}Handler *{{ .DomainName | toLower }}delivery.{{ .DomainName | toTitle }}Handler) {
 	// Define your routes here
 }

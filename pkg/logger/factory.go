@@ -20,7 +20,11 @@ var loggerLevelMap = map[string]zapcore.Level{
 	"fatal": zap.FatalLevel,
 }
 
-func NewLogger(env config.Environment, cfg config.LoggingProperties) *Logger {
+func NewLogger(env config.Environment, cfg *config.LoggingProperties) *Logger {
+	if cfg == nil {
+		panic("cfg cannot be nil")
+	}
+
 	var loggerConfig zap.Config
 	if env == config.EnvironmentProduction {
 		loggerConfig = zap.NewProductionConfig()

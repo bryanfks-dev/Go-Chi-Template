@@ -15,7 +15,7 @@ import (
 // @Router /public/health [get]
 // @Success 200 {object} basedto.SuccessHTTPResponse[any]
 // @Failure 500 {object} basedto.ErrorHTTPResponse
-func (eh *EtcHandler) HealthCheck(w http.ResponseWriter, r *http.Request) {
+func (h *EtcHandler) HealthCheck(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSONResponse(
 		w,
 		http.StatusOK,

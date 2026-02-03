@@ -7,13 +7,18 @@ import (
 	"context"
 	"os"
 	"os/signal"
+	"skeleton/di"
+	"skeleton/internal/routes"
 	"skeleton/pkg/application"
 	"skeleton/pkg/server"
+	"skeleton/pkg/server/middleware"
 	"syscall"
 	"time"
 
 	_ "skeleton/docs"
 	_ "skeleton/pkg/data/dto"
+
+	chimiddleware "github.com/go-chi/chi/v5/middleware"
 )
 
 const (
@@ -37,9 +42,19 @@ func main() {
 	)
 	defer cancel()
 
-	srv := server.NewServer(app.Config.Server, app.Logger, *app.Environment)
-	registerMiddlewares(srv, app.Logger, *app.Environment)
-	registerRoutes(srv, app.Logger, *app.Environment)
+	srv := server.NewServer(app.Config.Server, app.Logger, app.Environment)
+	srv.Router.Use(chimiddleware.RequestID)
+	srv.Router.Use(middleware.ZapRequestLoggerMiddleware(app.Logger))
+	srv.Router.Use(middleware.CORSMiddleware(app.Environment))
+
+	deliveryContainer := di.NewDeliveryContainer()
+	routes := routes.NewRoute(
+		srv,
+		app.Environment,
+		app.Logger,
+		deliveryContainer,
+	)
+	routes.MountRoutes()
 
 	go srv.Start()
 	<-ctx.Done()

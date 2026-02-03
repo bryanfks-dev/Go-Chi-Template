@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Server) Start() {
-	format := fmt.Sprintf("Starting HTTP server on %s", s.server.Addr)
+	format := fmt.Sprintf("Starting HTTP server on %s", s.Address())
 	s.logger.Info(format)
 
 	err := s.server.ListenAndServe()

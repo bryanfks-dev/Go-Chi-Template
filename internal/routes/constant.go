@@ -1,3 +1,3 @@
-package constant
+package routes
 
 const APIDocsRoute = "/docs/"
