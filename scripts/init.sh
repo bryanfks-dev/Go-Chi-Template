@@ -23,6 +23,7 @@ if [ "$INSTALL_DEPS" = "y" ] || [ "$INSTALL_DEPS" = "Y" ]; then
 fi
 
 # At the end, remove this init script
-rm -f init.sh
+rm -f scripts/init.sh
+rm -f scripts/init.bat
 
 echo "Initialization complete, you're all set!"
