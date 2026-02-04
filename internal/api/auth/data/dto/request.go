@@ -39,3 +39,17 @@ func (r PostAuthTokenRefreshRequestDTO) Validate() error {
 		),
 	)
 }
+
+type PostAuthLogoutRequestDTO struct {
+	RefreshToken string `json:"refresh_token"`
+}
+
+func (r PostAuthLogoutRequestDTO) Validate() error {
+	return validation.ValidateStruct(
+		&r,
+		validation.Field(
+			&r.RefreshToken,
+			validation.Required.Error("refresh_token_required"),
+		),
+	)
+}

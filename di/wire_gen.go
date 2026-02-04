@@ -9,6 +9,7 @@ package di
 import (
 	"skeleton/infra/ent"
 	"skeleton/internal/api/auth/delivery"
+	"skeleton/internal/api/auth/repository"
 	"skeleton/internal/api/auth/usecase"
 	"skeleton/internal/api/error/delivery"
 	"skeleton/internal/api/etc/delivery"
@@ -23,7 +24,8 @@ func NewContainer(logger2 *logger.Logger, db *ent.Client, sec *security.Security
 	etcHandler := etcdelivery.NewEtcHandler()
 	errorHandler := errordelivery.NewErrorHandler()
 	userRepository := userrepository.NewUserRepository(logger2)
-	authUsecase := authusecase.NewAuthUsecase(logger2, sec, db, userRepository)
+	authRepository := authrepository.NewAuthRepository(logger2)
+	authUsecase := authusecase.NewAuthUsecase(logger2, sec, db, userRepository, authRepository)
 	authHandler := authdelivery.NewAuthHandler(authUsecase)
 	container := &Container{
 		EtcHandler:   etcHandler,

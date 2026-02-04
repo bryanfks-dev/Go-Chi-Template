@@ -65,5 +65,10 @@ func (u *AuthUsecase) ProcessUserLogin(
 		)
 	}
 
+	_, err = u.authRepo.Create(ctx, u.db, user.ID, refreshToken)
+	if err != nil {
+		return nil, "", "", err
+	}
+
 	return user, refreshToken, accessToken, nil
 }

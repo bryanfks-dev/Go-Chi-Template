@@ -22,7 +22,12 @@ func NewApplication() *Application {
 
 	timezone.SetupTimezone(&cfg.Timezone)
 	logger := logger.NewLogger(env, &cfg.Logging)
-	security := security.NewSecurity(&cfg.Application, &cfg.Bcrypt, &cfg.JWT)
+	security := security.NewSecurity(
+		&cfg.Application,
+		&cfg.Bcrypt,
+		&cfg.HMAC,
+		&cfg.JWT,
+	)
 
 	db := db.NewDatabase(&cfg.Database, security, env, logger)
 

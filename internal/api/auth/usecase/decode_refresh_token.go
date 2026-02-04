@@ -19,7 +19,7 @@ func (u *AuthUsecase) DecodeRefreshToken(
 		u.logger.Debug("empty refresh token")
 		return nil, apperror.NewAppError(
 			http.StatusUnauthorized,
-			authdomain.ErrInvalidRefreshToken,
+			authdomain.ErrInvalidToken,
 		)
 	}
 
@@ -28,7 +28,7 @@ func (u *AuthUsecase) DecodeRefreshToken(
 		u.logger.Error("failed to decode refresh token: ", zap.Error(err))
 		return nil, apperror.NewAppError(
 			http.StatusUnauthorized,
-			authdomain.ErrInvalidRefreshToken,
+			authdomain.ErrInvalidToken,
 		)
 	}
 

@@ -15,6 +15,11 @@ definitions:
       user:
         $ref: '#/definitions/skeleton_internal_api_user_data_dto.UserDTO'
     type: object
+  skeleton_internal_api_auth_data_dto.PostAuthLogoutRequestDTO:
+    properties:
+      refresh_token:
+        type: string
+    type: object
   skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshRequestDTO:
     properties:
       refresh_token:
@@ -132,6 +137,44 @@ paths:
           schema:
             $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
       summary: Login Endpoint
+      tags:
+      - API / Auth
+  /api/auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Endpoint to logout user
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/skeleton_internal_api_auth_data_dto.PostAuthLogoutRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.HTTPResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ValidationErrorHTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+      summary: Logout Endpoint
       tags:
       - API / Auth
   /api/auth/token/refresh:

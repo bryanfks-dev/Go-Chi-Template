@@ -24,7 +24,7 @@ func (u *AuthUsecase) GenerateAccessToken(
 		)
 		return "", apperror.NewAppError(
 			http.StatusUnauthorized,
-			authdomain.ErrInvalidRefreshToken,
+			authdomain.ErrInvalidToken,
 		)
 	}
 
@@ -37,7 +37,7 @@ func (u *AuthUsecase) GenerateAccessToken(
 	if err != nil {
 		return "", apperror.NewAppError(
 			http.StatusInternalServerError,
-			authdomain.ErrGenerateAccessTokenFailed,
+			authdomain.ErrInvalidToken,
 		)
 	}
 

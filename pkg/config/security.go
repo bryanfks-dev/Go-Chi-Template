@@ -1,5 +1,13 @@
 package config
 
+type BcryptProperties struct {
+	Cost int `yaml:"cost"`
+}
+
+type HMACProperties struct {
+	TokenSecret string `yaml:"token_secret"`
+}
+
 type JWTPayloadProperties struct {
 	ExpirationMinutes int `yaml:"expiration_minutes"`
 }

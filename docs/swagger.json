@@ -64,6 +64,64 @@
                 }
             }
         },
+        "/api/auth/logout": {
+            "post": {
+                "description": "Endpoint to logout user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API / Auth"
+                ],
+                "summary": "Logout Endpoint",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_internal_api_auth_data_dto.PostAuthLogoutRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.HTTPResponse-any"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ValidationErrorHTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/auth/token/refresh": {
             "post": {
                 "description": "Endpoint to refresh access token",
@@ -166,6 +224,14 @@
                 },
                 "user": {
                     "$ref": "#/definitions/skeleton_internal_api_user_data_dto.UserDTO"
+                }
+            }
+        },
+        "skeleton_internal_api_auth_data_dto.PostAuthLogoutRequestDTO": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
                 }
             }
         },

@@ -15,6 +15,8 @@ database:
     sslmode: disable
 bcrypt:
   cost: 12
+hmac:
+  token_secret: development_hmac_secret_key
 jwt:
   secret: production_secret_key
   algorithm: HS256
