@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"skeleton/infra/ent/authsession"
 	"skeleton/infra/ent/user"
 	"sync"
 
@@ -73,7 +74,8 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			user.Table: user.ValidColumn,
+			authsession.Table: authsession.ValidColumn,
+			user.Table:        user.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

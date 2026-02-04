@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"skeleton/infra/ent/authsession"
 	"skeleton/infra/ent/schema"
 	"skeleton/infra/ent/user"
 	"time"
@@ -12,6 +13,25 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	authsessionMixin := schema.AuthSession{}.Mixin()
+	authsessionMixinFields0 := authsessionMixin[0].Fields()
+	_ = authsessionMixinFields0
+	authsessionFields := schema.AuthSession{}.Fields()
+	_ = authsessionFields
+	// authsessionDescCreateTime is the schema descriptor for create_time field.
+	authsessionDescCreateTime := authsessionMixinFields0[0].Descriptor()
+	// authsession.DefaultCreateTime holds the default value on creation for the create_time field.
+	authsession.DefaultCreateTime = authsessionDescCreateTime.Default.(func() time.Time)
+	// authsessionDescUpdateTime is the schema descriptor for update_time field.
+	authsessionDescUpdateTime := authsessionMixinFields0[1].Descriptor()
+	// authsession.DefaultUpdateTime holds the default value on creation for the update_time field.
+	authsession.DefaultUpdateTime = authsessionDescUpdateTime.Default.(func() time.Time)
+	// authsession.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	authsession.UpdateDefaultUpdateTime = authsessionDescUpdateTime.UpdateDefault.(func() time.Time)
+	// authsessionDescUserAgent is the schema descriptor for user_agent field.
+	authsessionDescUserAgent := authsessionFields[2].Descriptor()
+	// authsession.UserAgentValidator is a validator for the "user_agent" field. It is called by the builders before save.
+	authsession.UserAgentValidator = authsessionDescUserAgent.Validators[0].(func(string) error)
 	userMixin := schema.User{}.Mixin()
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0

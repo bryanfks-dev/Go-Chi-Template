@@ -125,7 +125,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/public/health": {
+        "/public/api/health": {
             "get": {
                 "description": "Endpoint to check the health of the service",
                 "produces": [

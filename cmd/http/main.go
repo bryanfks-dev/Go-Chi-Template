@@ -22,23 +22,18 @@ import (
 
 const (
 	shutdownServerTimeout = 10 * time.Second
-	databasePingTimeout   = 5 * time.Second
 )
 
 // @Title Skeleton API
 // @Version 1.0
 func main() {
 	app := application.NewApplication()
-	ctx, cancel := context.WithTimeout(
-		context.Background(),
-		databasePingTimeout,
-	)
 	defer func() {
 		app.Logger.Info("Executing post shutdown tasks...")
 		app.CleanUp()
 	}()
 
-	ctx, cancel = signal.NotifyContext(
+	ctx, cancel := signal.NotifyContext(
 		context.Background(),
 		os.Interrupt,
 		syscall.SIGTERM,

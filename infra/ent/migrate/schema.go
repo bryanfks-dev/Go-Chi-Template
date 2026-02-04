@@ -8,6 +8,28 @@ import (
 )
 
 var (
+	// AuthSessionsColumns holds the columns for the "auth_sessions" table.
+	AuthSessionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "refresh_token", Type: field.TypeString, Unique: true},
+		{Name: "user_agent", Type: field.TypeString, Size: 255},
+	}
+	// AuthSessionsTable holds the schema information for the "auth_sessions" table.
+	AuthSessionsTable = &schema.Table{
+		Name:       "auth_sessions",
+		Columns:    AuthSessionsColumns,
+		PrimaryKey: []*schema.Column{AuthSessionsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "authsession_user_id_refresh_token",
+				Unique:  false,
+				Columns: []*schema.Column{AuthSessionsColumns[3], AuthSessionsColumns[4]},
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -33,6 +55,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		AuthSessionsTable,
 		UsersTable,
 	}
 )

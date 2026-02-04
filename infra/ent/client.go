@@ -11,6 +11,7 @@ import (
 
 	"skeleton/infra/ent/migrate"
 
+	"skeleton/infra/ent/authsession"
 	"skeleton/infra/ent/user"
 
 	"entgo.io/ent"
@@ -23,6 +24,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// AuthSession is the client for interacting with the AuthSession builders.
+	AuthSession *AuthSessionClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 }
@@ -36,6 +39,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.AuthSession = NewAuthSessionClient(c.config)
 	c.User = NewUserClient(c.config)
 }
 
@@ -127,9 +131,10 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		User:   NewUserClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		AuthSession: NewAuthSessionClient(cfg),
+		User:        NewUserClient(cfg),
 	}, nil
 }
 
@@ -147,16 +152,17 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		User:   NewUserClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		AuthSession: NewAuthSessionClient(cfg),
+		User:        NewUserClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		User.
+//		AuthSession.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -178,22 +184,159 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.AuthSession.Use(hooks...)
 	c.User.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
+	c.AuthSession.Intercept(interceptors...)
 	c.User.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
+	case *AuthSessionMutation:
+		return c.AuthSession.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
+// AuthSessionClient is a client for the AuthSession schema.
+type AuthSessionClient struct {
+	config
+}
+
+// NewAuthSessionClient returns a client for the AuthSession from the given config.
+func NewAuthSessionClient(c config) *AuthSessionClient {
+	return &AuthSessionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `authsession.Hooks(f(g(h())))`.
+func (c *AuthSessionClient) Use(hooks ...Hook) {
+	c.hooks.AuthSession = append(c.hooks.AuthSession, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `authsession.Intercept(f(g(h())))`.
+func (c *AuthSessionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AuthSession = append(c.inters.AuthSession, interceptors...)
+}
+
+// Create returns a builder for creating a AuthSession entity.
+func (c *AuthSessionClient) Create() *AuthSessionCreate {
+	mutation := newAuthSessionMutation(c.config, OpCreate)
+	return &AuthSessionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AuthSession entities.
+func (c *AuthSessionClient) CreateBulk(builders ...*AuthSessionCreate) *AuthSessionCreateBulk {
+	return &AuthSessionCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *AuthSessionClient) MapCreateBulk(slice any, setFunc func(*AuthSessionCreate, int)) *AuthSessionCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &AuthSessionCreateBulk{err: fmt.Errorf("calling to AuthSessionClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*AuthSessionCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &AuthSessionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AuthSession.
+func (c *AuthSessionClient) Update() *AuthSessionUpdate {
+	mutation := newAuthSessionMutation(c.config, OpUpdate)
+	return &AuthSessionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AuthSessionClient) UpdateOne(_m *AuthSession) *AuthSessionUpdateOne {
+	mutation := newAuthSessionMutation(c.config, OpUpdateOne, withAuthSession(_m))
+	return &AuthSessionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AuthSessionClient) UpdateOneID(id int) *AuthSessionUpdateOne {
+	mutation := newAuthSessionMutation(c.config, OpUpdateOne, withAuthSessionID(id))
+	return &AuthSessionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AuthSession.
+func (c *AuthSessionClient) Delete() *AuthSessionDelete {
+	mutation := newAuthSessionMutation(c.config, OpDelete)
+	return &AuthSessionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AuthSessionClient) DeleteOne(_m *AuthSession) *AuthSessionDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *AuthSessionClient) DeleteOneID(id int) *AuthSessionDeleteOne {
+	builder := c.Delete().Where(authsession.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AuthSessionDeleteOne{builder}
+}
+
+// Query returns a query builder for AuthSession.
+func (c *AuthSessionClient) Query() *AuthSessionQuery {
+	return &AuthSessionQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeAuthSession},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a AuthSession entity by its id.
+func (c *AuthSessionClient) Get(ctx context.Context, id int) (*AuthSession, error) {
+	return c.Query().Where(authsession.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AuthSessionClient) GetX(ctx context.Context, id int) *AuthSession {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AuthSessionClient) Hooks() []Hook {
+	return c.hooks.AuthSession
+}
+
+// Interceptors returns the client interceptors.
+func (c *AuthSessionClient) Interceptors() []Interceptor {
+	return c.inters.AuthSession
+}
+
+func (c *AuthSessionClient) mutate(ctx context.Context, m *AuthSessionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&AuthSessionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&AuthSessionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&AuthSessionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&AuthSessionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown AuthSession mutation op: %q", m.Op())
 	}
 }
 
@@ -333,9 +476,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		User []ent.Hook
+		AuthSession, User []ent.Hook
 	}
 	inters struct {
-		User []ent.Interceptor
+		AuthSession, User []ent.Interceptor
 	}
 )

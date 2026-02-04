@@ -12,7 +12,7 @@ import (
 // @Description Endpoint to check the health of the service
 // @Tags Public API / Etc
 // @Produce json
-// @Router /public/health [get]
+// @Router /public/api/health [get]
 // @Success 200 {object} basedto.HTTPResponse[any]
 // @Failure 500 {object} basedto.ErrorHTTPResponse
 func (h *EtcHandler) HealthCheck(w http.ResponseWriter, r *http.Request) {

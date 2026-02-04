@@ -8,11 +8,11 @@ package di
 
 import (
 	"skeleton/infra/ent"
-	authdelivery "skeleton/internal/api/auth/delivery"
-	authusecase "skeleton/internal/api/auth/usecase"
-	errordelivery "skeleton/internal/api/error/delivery"
-	etcdelivery "skeleton/internal/api/etc/delivery"
-	userrepository "skeleton/internal/api/user/repository"
+	"skeleton/internal/api/auth/delivery"
+	"skeleton/internal/api/auth/usecase"
+	"skeleton/internal/api/error/delivery"
+	"skeleton/internal/api/etc/delivery"
+	"skeleton/internal/api/user/repository"
 	"skeleton/pkg/logger"
 	"skeleton/pkg/security"
 )
