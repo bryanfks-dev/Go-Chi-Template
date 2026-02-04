@@ -1,7 +1,6 @@
 package authusecase
 
 import (
-	"context"
 	"net/http"
 	authdomain "skeleton/internal/api/auth/domain"
 	apperror "skeleton/pkg/error"
@@ -11,8 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (u *AuthUsecase) DecodeRefreshToken(
-	ctx context.Context,
+func (u *AuthUsecase) decodeRefreshToken(
 	refreshToken string,
 ) (*security.JWTClaims, error) {
 	if strings.TrimSpace(refreshToken) == "" {
@@ -25,7 +23,7 @@ func (u *AuthUsecase) DecodeRefreshToken(
 
 	refreshClaims, err := u.sec.DecodeJWT(refreshToken)
 	if err != nil {
-		u.logger.Error("failed to decode refresh token: ", zap.Error(err))
+		u.logger.Error("failed to decode refresh token", zap.Error(err))
 		return nil, apperror.NewAppError(
 			http.StatusUnauthorized,
 			authdomain.ErrInvalidToken,

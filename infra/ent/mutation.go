@@ -32,19 +32,21 @@ const (
 // AuthSessionMutation represents an operation that mutates the AuthSession nodes in the graph.
 type AuthSessionMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	create_time   *time.Time
-	update_time   *time.Time
-	user_id       *int
-	adduser_id    *int
-	refresh_token *string
-	user_agent    *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*AuthSession, error)
-	predicates    []predicate.AuthSession
+	op               Op
+	typ              string
+	id               *int
+	create_time      *time.Time
+	update_time      *time.Time
+	refresh_token_id *string
+	user_id          *int
+	adduser_id       *int
+	refresh_token    *string
+	user_agent       *string
+	expires_at       *time.Time
+	clearedFields    map[string]struct{}
+	done             bool
+	oldValue         func(context.Context) (*AuthSession, error)
+	predicates       []predicate.AuthSession
 }
 
 var _ ent.Mutation = (*AuthSessionMutation)(nil)
@@ -217,6 +219,42 @@ func (m *AuthSessionMutation) ResetUpdateTime() {
 	m.update_time = nil
 }
 
+// SetRefreshTokenID sets the "refresh_token_id" field.
+func (m *AuthSessionMutation) SetRefreshTokenID(s string) {
+	m.refresh_token_id = &s
+}
+
+// RefreshTokenID returns the value of the "refresh_token_id" field in the mutation.
+func (m *AuthSessionMutation) RefreshTokenID() (r string, exists bool) {
+	v := m.refresh_token_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRefreshTokenID returns the old "refresh_token_id" field's value of the AuthSession entity.
+// If the AuthSession object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AuthSessionMutation) OldRefreshTokenID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRefreshTokenID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRefreshTokenID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRefreshTokenID: %w", err)
+	}
+	return oldValue.RefreshTokenID, nil
+}
+
+// ResetRefreshTokenID resets all changes to the "refresh_token_id" field.
+func (m *AuthSessionMutation) ResetRefreshTokenID() {
+	m.refresh_token_id = nil
+}
+
 // SetUserID sets the "user_id" field.
 func (m *AuthSessionMutation) SetUserID(i int) {
 	m.user_id = &i
@@ -345,6 +383,42 @@ func (m *AuthSessionMutation) ResetUserAgent() {
 	m.user_agent = nil
 }
 
+// SetExpiresAt sets the "expires_at" field.
+func (m *AuthSessionMutation) SetExpiresAt(t time.Time) {
+	m.expires_at = &t
+}
+
+// ExpiresAt returns the value of the "expires_at" field in the mutation.
+func (m *AuthSessionMutation) ExpiresAt() (r time.Time, exists bool) {
+	v := m.expires_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldExpiresAt returns the old "expires_at" field's value of the AuthSession entity.
+// If the AuthSession object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AuthSessionMutation) OldExpiresAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldExpiresAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldExpiresAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldExpiresAt: %w", err)
+	}
+	return oldValue.ExpiresAt, nil
+}
+
+// ResetExpiresAt resets all changes to the "expires_at" field.
+func (m *AuthSessionMutation) ResetExpiresAt() {
+	m.expires_at = nil
+}
+
 // Where appends a list predicates to the AuthSessionMutation builder.
 func (m *AuthSessionMutation) Where(ps ...predicate.AuthSession) {
 	m.predicates = append(m.predicates, ps...)
@@ -379,12 +453,15 @@ func (m *AuthSessionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AuthSessionMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 7)
 	if m.create_time != nil {
 		fields = append(fields, authsession.FieldCreateTime)
 	}
 	if m.update_time != nil {
 		fields = append(fields, authsession.FieldUpdateTime)
+	}
+	if m.refresh_token_id != nil {
+		fields = append(fields, authsession.FieldRefreshTokenID)
 	}
 	if m.user_id != nil {
 		fields = append(fields, authsession.FieldUserID)
@@ -394,6 +471,9 @@ func (m *AuthSessionMutation) Fields() []string {
 	}
 	if m.user_agent != nil {
 		fields = append(fields, authsession.FieldUserAgent)
+	}
+	if m.expires_at != nil {
+		fields = append(fields, authsession.FieldExpiresAt)
 	}
 	return fields
 }
@@ -407,12 +487,16 @@ func (m *AuthSessionMutation) Field(name string) (ent.Value, bool) {
 		return m.CreateTime()
 	case authsession.FieldUpdateTime:
 		return m.UpdateTime()
+	case authsession.FieldRefreshTokenID:
+		return m.RefreshTokenID()
 	case authsession.FieldUserID:
 		return m.UserID()
 	case authsession.FieldRefreshToken:
 		return m.RefreshToken()
 	case authsession.FieldUserAgent:
 		return m.UserAgent()
+	case authsession.FieldExpiresAt:
+		return m.ExpiresAt()
 	}
 	return nil, false
 }
@@ -426,12 +510,16 @@ func (m *AuthSessionMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldCreateTime(ctx)
 	case authsession.FieldUpdateTime:
 		return m.OldUpdateTime(ctx)
+	case authsession.FieldRefreshTokenID:
+		return m.OldRefreshTokenID(ctx)
 	case authsession.FieldUserID:
 		return m.OldUserID(ctx)
 	case authsession.FieldRefreshToken:
 		return m.OldRefreshToken(ctx)
 	case authsession.FieldUserAgent:
 		return m.OldUserAgent(ctx)
+	case authsession.FieldExpiresAt:
+		return m.OldExpiresAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown AuthSession field %s", name)
 }
@@ -455,6 +543,13 @@ func (m *AuthSessionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUpdateTime(v)
 		return nil
+	case authsession.FieldRefreshTokenID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRefreshTokenID(v)
+		return nil
 	case authsession.FieldUserID:
 		v, ok := value.(int)
 		if !ok {
@@ -475,6 +570,13 @@ func (m *AuthSessionMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUserAgent(v)
+		return nil
+	case authsession.FieldExpiresAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetExpiresAt(v)
 		return nil
 	}
 	return fmt.Errorf("unknown AuthSession field %s", name)
@@ -546,6 +648,9 @@ func (m *AuthSessionMutation) ResetField(name string) error {
 	case authsession.FieldUpdateTime:
 		m.ResetUpdateTime()
 		return nil
+	case authsession.FieldRefreshTokenID:
+		m.ResetRefreshTokenID()
+		return nil
 	case authsession.FieldUserID:
 		m.ResetUserID()
 		return nil
@@ -554,6 +659,9 @@ func (m *AuthSessionMutation) ResetField(name string) error {
 		return nil
 	case authsession.FieldUserAgent:
 		m.ResetUserAgent()
+		return nil
+	case authsession.FieldExpiresAt:
+		m.ResetExpiresAt()
 		return nil
 	}
 	return fmt.Errorf("unknown AuthSession field %s", name)

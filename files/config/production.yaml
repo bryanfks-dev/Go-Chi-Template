@@ -16,7 +16,8 @@ database:
 bcrypt:
   cost: 12
 hmac:
-  token_secret: development_hmac_secret_key
+  algorithm: SHA256
+  token_secret: production_hmac_secret_key
 jwt:
   secret: production_secret_key
   algorithm: HS256

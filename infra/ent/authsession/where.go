@@ -64,6 +64,11 @@ func UpdateTime(v time.Time) predicate.AuthSession {
 	return predicate.AuthSession(sql.FieldEQ(FieldUpdateTime, v))
 }
 
+// RefreshTokenID applies equality check predicate on the "refresh_token_id" field. It's identical to RefreshTokenIDEQ.
+func RefreshTokenID(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldEQ(FieldRefreshTokenID, v))
+}
+
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
 func UserID(v int) predicate.AuthSession {
 	return predicate.AuthSession(sql.FieldEQ(FieldUserID, v))
@@ -77,6 +82,11 @@ func RefreshToken(v string) predicate.AuthSession {
 // UserAgent applies equality check predicate on the "user_agent" field. It's identical to UserAgentEQ.
 func UserAgent(v string) predicate.AuthSession {
 	return predicate.AuthSession(sql.FieldEQ(FieldUserAgent, v))
+}
+
+// ExpiresAt applies equality check predicate on the "expires_at" field. It's identical to ExpiresAtEQ.
+func ExpiresAt(v time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldEQ(FieldExpiresAt, v))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -157,6 +167,71 @@ func UpdateTimeLT(v time.Time) predicate.AuthSession {
 // UpdateTimeLTE applies the LTE predicate on the "update_time" field.
 func UpdateTimeLTE(v time.Time) predicate.AuthSession {
 	return predicate.AuthSession(sql.FieldLTE(FieldUpdateTime, v))
+}
+
+// RefreshTokenIDEQ applies the EQ predicate on the "refresh_token_id" field.
+func RefreshTokenIDEQ(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldEQ(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDNEQ applies the NEQ predicate on the "refresh_token_id" field.
+func RefreshTokenIDNEQ(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldNEQ(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDIn applies the In predicate on the "refresh_token_id" field.
+func RefreshTokenIDIn(vs ...string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldIn(FieldRefreshTokenID, vs...))
+}
+
+// RefreshTokenIDNotIn applies the NotIn predicate on the "refresh_token_id" field.
+func RefreshTokenIDNotIn(vs ...string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldNotIn(FieldRefreshTokenID, vs...))
+}
+
+// RefreshTokenIDGT applies the GT predicate on the "refresh_token_id" field.
+func RefreshTokenIDGT(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldGT(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDGTE applies the GTE predicate on the "refresh_token_id" field.
+func RefreshTokenIDGTE(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldGTE(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDLT applies the LT predicate on the "refresh_token_id" field.
+func RefreshTokenIDLT(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldLT(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDLTE applies the LTE predicate on the "refresh_token_id" field.
+func RefreshTokenIDLTE(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldLTE(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDContains applies the Contains predicate on the "refresh_token_id" field.
+func RefreshTokenIDContains(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldContains(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDHasPrefix applies the HasPrefix predicate on the "refresh_token_id" field.
+func RefreshTokenIDHasPrefix(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldHasPrefix(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDHasSuffix applies the HasSuffix predicate on the "refresh_token_id" field.
+func RefreshTokenIDHasSuffix(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldHasSuffix(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDEqualFold applies the EqualFold predicate on the "refresh_token_id" field.
+func RefreshTokenIDEqualFold(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldEqualFold(FieldRefreshTokenID, v))
+}
+
+// RefreshTokenIDContainsFold applies the ContainsFold predicate on the "refresh_token_id" field.
+func RefreshTokenIDContainsFold(v string) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldContainsFold(FieldRefreshTokenID, v))
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.
@@ -327,6 +402,46 @@ func UserAgentEqualFold(v string) predicate.AuthSession {
 // UserAgentContainsFold applies the ContainsFold predicate on the "user_agent" field.
 func UserAgentContainsFold(v string) predicate.AuthSession {
 	return predicate.AuthSession(sql.FieldContainsFold(FieldUserAgent, v))
+}
+
+// ExpiresAtEQ applies the EQ predicate on the "expires_at" field.
+func ExpiresAtEQ(v time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldEQ(FieldExpiresAt, v))
+}
+
+// ExpiresAtNEQ applies the NEQ predicate on the "expires_at" field.
+func ExpiresAtNEQ(v time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldNEQ(FieldExpiresAt, v))
+}
+
+// ExpiresAtIn applies the In predicate on the "expires_at" field.
+func ExpiresAtIn(vs ...time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldIn(FieldExpiresAt, vs...))
+}
+
+// ExpiresAtNotIn applies the NotIn predicate on the "expires_at" field.
+func ExpiresAtNotIn(vs ...time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldNotIn(FieldExpiresAt, vs...))
+}
+
+// ExpiresAtGT applies the GT predicate on the "expires_at" field.
+func ExpiresAtGT(v time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldGT(FieldExpiresAt, v))
+}
+
+// ExpiresAtGTE applies the GTE predicate on the "expires_at" field.
+func ExpiresAtGTE(v time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldGTE(FieldExpiresAt, v))
+}
+
+// ExpiresAtLT applies the LT predicate on the "expires_at" field.
+func ExpiresAtLT(v time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldLT(FieldExpiresAt, v))
+}
+
+// ExpiresAtLTE applies the LTE predicate on the "expires_at" field.
+func ExpiresAtLTE(v time.Time) predicate.AuthSession {
+	return predicate.AuthSession(sql.FieldLTE(FieldExpiresAt, v))
 }
 
 // And groups predicates with the AND operator between them.

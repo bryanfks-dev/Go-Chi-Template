@@ -133,7 +133,7 @@ const docTemplate = `{
         },
         "/api/auth/token/refresh": {
             "post": {
-                "description": "Endpoint to refresh access token",
+                "description": "Endpoint to refresh Access, CSRF, and XSRF tokens",
                 "consumes": [
                     "application/json"
                 ],
@@ -143,7 +143,7 @@ const docTemplate = `{
                 "tags": [
                     "API / Auth"
                 ],
-                "summary": "Refresh Access Token Endpoint",
+                "summary": "Refresh Authentication Tokens Endpoint",
                 "parameters": [
                     {
                         "description": "Request Body",
@@ -228,11 +228,17 @@ const docTemplate = `{
                 "access_token": {
                     "type": "string"
                 },
+                "csrf_token": {
+                    "type": "string"
+                },
                 "refresh_token": {
                     "type": "string"
                 },
                 "user": {
                     "$ref": "#/definitions/skeleton_internal_api_user_data_dto.UserDTO"
+                },
+                "xsrf_token": {
+                    "type": "string"
                 }
             }
         },
@@ -256,6 +262,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "access_token": {
+                    "type": "string"
+                },
+                "csrf_token": {
+                    "type": "string"
+                },
+                "xsrf_token": {
                     "type": "string"
                 }
             }

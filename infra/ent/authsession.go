@@ -21,12 +21,16 @@ type AuthSession struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
 	UpdateTime time.Time `json:"update_time,omitempty"`
+	// RefreshTokenID holds the value of the "refresh_token_id" field.
+	RefreshTokenID string `json:"refresh_token_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID int `json:"user_id,omitempty"`
 	// RefreshToken holds the value of the "refresh_token" field.
 	RefreshToken string `json:"refresh_token,omitempty"`
 	// UserAgent holds the value of the "user_agent" field.
-	UserAgent    string `json:"user_agent,omitempty"`
+	UserAgent string `json:"user_agent,omitempty"`
+	// ExpiresAt holds the value of the "expires_at" field.
+	ExpiresAt    time.Time `json:"expires_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -37,9 +41,9 @@ func (*AuthSession) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case authsession.FieldID, authsession.FieldUserID:
 			values[i] = new(sql.NullInt64)
-		case authsession.FieldRefreshToken, authsession.FieldUserAgent:
+		case authsession.FieldRefreshTokenID, authsession.FieldRefreshToken, authsession.FieldUserAgent:
 			values[i] = new(sql.NullString)
-		case authsession.FieldCreateTime, authsession.FieldUpdateTime:
+		case authsession.FieldCreateTime, authsession.FieldUpdateTime, authsession.FieldExpiresAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -74,6 +78,12 @@ func (_m *AuthSession) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.UpdateTime = value.Time
 			}
+		case authsession.FieldRefreshTokenID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field refresh_token_id", values[i])
+			} else if value.Valid {
+				_m.RefreshTokenID = value.String
+			}
 		case authsession.FieldUserID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
@@ -91,6 +101,12 @@ func (_m *AuthSession) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field user_agent", values[i])
 			} else if value.Valid {
 				_m.UserAgent = value.String
+			}
+		case authsession.FieldExpiresAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field expires_at", values[i])
+			} else if value.Valid {
+				_m.ExpiresAt = value.Time
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -134,6 +150,9 @@ func (_m *AuthSession) String() string {
 	builder.WriteString("update_time=")
 	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
+	builder.WriteString("refresh_token_id=")
+	builder.WriteString(_m.RefreshTokenID)
+	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteString(", ")
@@ -142,6 +161,9 @@ func (_m *AuthSession) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("user_agent=")
 	builder.WriteString(_m.UserAgent)
+	builder.WriteString(", ")
+	builder.WriteString("expires_at=")
+	builder.WriteString(_m.ExpiresAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

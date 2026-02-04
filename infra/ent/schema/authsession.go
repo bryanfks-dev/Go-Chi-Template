@@ -15,9 +15,11 @@ type AuthSession struct {
 // Fields of the AuthSession.
 func (AuthSession) Fields() []ent.Field {
 	return []ent.Field{
+		field.String("refresh_token_id").Unique().Immutable().NotEmpty(),
 		field.Int("user_id"),
 		field.String("refresh_token").Unique(),
 		field.String("user_agent").MaxLen(255),
+		field.Time("expires_at"),
 	}
 }
 
@@ -28,7 +30,7 @@ func (AuthSession) Edges() []ent.Edge {
 
 func (AuthSession) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("user_id", "refresh_token"),
+		index.Fields("refresh_token_id"),
 	}
 }
 

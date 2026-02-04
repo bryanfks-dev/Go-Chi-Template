@@ -28,8 +28,12 @@ func init() {
 	authsession.DefaultUpdateTime = authsessionDescUpdateTime.Default.(func() time.Time)
 	// authsession.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	authsession.UpdateDefaultUpdateTime = authsessionDescUpdateTime.UpdateDefault.(func() time.Time)
+	// authsessionDescRefreshTokenID is the schema descriptor for refresh_token_id field.
+	authsessionDescRefreshTokenID := authsessionFields[0].Descriptor()
+	// authsession.RefreshTokenIDValidator is a validator for the "refresh_token_id" field. It is called by the builders before save.
+	authsession.RefreshTokenIDValidator = authsessionDescRefreshTokenID.Validators[0].(func(string) error)
 	// authsessionDescUserAgent is the schema descriptor for user_agent field.
-	authsessionDescUserAgent := authsessionFields[2].Descriptor()
+	authsessionDescUserAgent := authsessionFields[3].Descriptor()
 	// authsession.UserAgentValidator is a validator for the "user_agent" field. It is called by the builders before save.
 	authsession.UserAgentValidator = authsessionDescUserAgent.Validators[0].(func(string) error)
 	userMixin := schema.User{}.Mixin()

@@ -32,11 +32,14 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, refreshToken, accessToken, err := h.authUc.ProcessUserLogin(
-		r.Context(),
-		req.Email,
-		req.Password,
-	)
+	userAgent := r.UserAgent()
+	user, refreshToken, accessToken, csrfToken, xsrfToken, err :=
+		h.authUc.ProcessUserLogin(
+			r.Context(),
+			req.Email,
+			req.Password,
+			userAgent,
+		)
 	if err != nil {
 		utils.WriteErrorJSONResponse(w, err)
 		return
@@ -46,6 +49,8 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		user,
 		accessToken,
 		refreshToken,
+		csrfToken,
+		xsrfToken,
 	)
 	res := basedto.NewHTTPResponse(resData)
 	utils.WriteJSONResponse(w, http.StatusOK, res)

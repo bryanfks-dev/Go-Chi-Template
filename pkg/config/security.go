@@ -5,6 +5,7 @@ type BcryptProperties struct {
 }
 
 type HMACProperties struct {
+	Algorithm   string `yaml:"algorithm"`
 	TokenSecret string `yaml:"token_secret"`
 }
 

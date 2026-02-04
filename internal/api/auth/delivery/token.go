@@ -9,8 +9,8 @@ import (
 	_ "skeleton/docs"
 )
 
-// @Summary Refresh Access Token Endpoint
-// @Description Endpoint to refresh access token
+// @Summary Refresh Authentication Tokens Endpoint
+// @Description Endpoint to refresh Access, CSRF, and XSRF tokens
 // @Tags API / Auth
 // @Accept json
 // @Produce json
@@ -30,7 +30,7 @@ func (h *AuthHandler) RefreshAccessToken(
 		return
 	}
 
-	refreshClaims, err := h.authUc.DecodeRefreshToken(
+	accessToken, csrfToken, xsrfToken, err := h.authUc.RefreshAuthToken(
 		r.Context(),
 		req.RefreshToken,
 	)
@@ -39,16 +39,11 @@ func (h *AuthHandler) RefreshAccessToken(
 		return
 	}
 
-	accessToken, err := h.authUc.GenerateAccessToken(
-		r.Context(),
-		refreshClaims,
+	resData := authdto.NewPostAuthTokenRefreshResponseDTO(
+		accessToken,
+		csrfToken,
+		xsrfToken,
 	)
-	if err != nil {
-		utils.WriteErrorJSONResponse(w, err)
-		return
-	}
-
-	resData := authdto.NewPostAuthTokenRefreshResponseDTO(accessToken)
 	res := basedto.NewHTTPResponse(resData)
 	utils.WriteJSONResponse(w, http.StatusOK, res)
 }

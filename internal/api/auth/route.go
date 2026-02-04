@@ -9,6 +9,7 @@ import (
 func RegisterRoutes(router *chi.Mux, authHandler *authdelivery.AuthHandler) {
 	router.Route("/auth", func(r chi.Router) {
 		r.Post("/login", authHandler.Login)
+		r.Post("/logout", authHandler.Logout)
 
 		r.Route("/token", func(r chi.Router) {
 			r.Post("/refresh", authHandler.RefreshAccessToken)

@@ -83,6 +83,20 @@ func (_u *AuthSessionUpdate) SetNillableUserAgent(v *string) *AuthSessionUpdate 
 	return _u
 }
 
+// SetExpiresAt sets the "expires_at" field.
+func (_u *AuthSessionUpdate) SetExpiresAt(v time.Time) *AuthSessionUpdate {
+	_u.mutation.SetExpiresAt(v)
+	return _u
+}
+
+// SetNillableExpiresAt sets the "expires_at" field if the given value is not nil.
+func (_u *AuthSessionUpdate) SetNillableExpiresAt(v *time.Time) *AuthSessionUpdate {
+	if v != nil {
+		_u.SetExpiresAt(*v)
+	}
+	return _u
+}
+
 // Mutation returns the AuthSessionMutation object of the builder.
 func (_u *AuthSessionUpdate) Mutation() *AuthSessionMutation {
 	return _u.mutation
@@ -161,6 +175,9 @@ func (_u *AuthSessionUpdate) sqlSave(ctx context.Context) (_node int, err error)
 	if value, ok := _u.mutation.UserAgent(); ok {
 		_spec.SetField(authsession.FieldUserAgent, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.ExpiresAt(); ok {
+		_spec.SetField(authsession.FieldExpiresAt, field.TypeTime, value)
+	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{authsession.Label}
@@ -232,6 +249,20 @@ func (_u *AuthSessionUpdateOne) SetUserAgent(v string) *AuthSessionUpdateOne {
 func (_u *AuthSessionUpdateOne) SetNillableUserAgent(v *string) *AuthSessionUpdateOne {
 	if v != nil {
 		_u.SetUserAgent(*v)
+	}
+	return _u
+}
+
+// SetExpiresAt sets the "expires_at" field.
+func (_u *AuthSessionUpdateOne) SetExpiresAt(v time.Time) *AuthSessionUpdateOne {
+	_u.mutation.SetExpiresAt(v)
+	return _u
+}
+
+// SetNillableExpiresAt sets the "expires_at" field if the given value is not nil.
+func (_u *AuthSessionUpdateOne) SetNillableExpiresAt(v *time.Time) *AuthSessionUpdateOne {
+	if v != nil {
+		_u.SetExpiresAt(*v)
 	}
 	return _u
 }
@@ -343,6 +374,9 @@ func (_u *AuthSessionUpdateOne) sqlSave(ctx context.Context) (_node *AuthSession
 	}
 	if value, ok := _u.mutation.UserAgent(); ok {
 		_spec.SetField(authsession.FieldUserAgent, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.ExpiresAt(); ok {
+		_spec.SetField(authsession.FieldExpiresAt, field.TypeTime, value)
 	}
 	_node = &AuthSession{config: _u.config}
 	_spec.Assign = _node.assignValues

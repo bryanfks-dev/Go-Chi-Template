@@ -14,18 +14,21 @@ import (
 func (r *AuthRepository) Create(
 	ctx context.Context,
 	tx *ent.Client,
-	userID int,
-	refreshToken string,
+	ss *authdomain.SessionInput,
 ) (*ent.AuthSession, error) {
 	session, err := tx.AuthSession.
 		Create().
-		SetUserID(userID).
-		SetRefreshToken(refreshToken).
+		SetUserID(ss.UserID).
+		SetRefreshTokenID(ss.RefreshTokenID).
+		SetRefreshToken(ss.RefreshToken).
+		SetUserAgent(ss.UserAgent).
+		SetExpiresAt(ss.ExpiresAt).
 		Save(ctx)
+
 	if err != nil {
 		r.logger.Error(
 			"failed creating auth session",
-			zap.Int("userID", userID),
+			zap.Int("userID", ss.UserID),
 			zap.Error(err),
 		)
 		return nil, apperror.NewAppError(
@@ -36,26 +39,26 @@ func (r *AuthRepository) Create(
 	return session, nil
 }
 
-func (r *AuthRepository) FindByRefreshToken(
+func (r *AuthRepository) FindByRefreshTokenID(
 	ctx context.Context,
 	tx *ent.Client,
-	refreshToken string,
+	refreshTokenID string,
 ) (*ent.AuthSession, error) {
 	s, err := tx.AuthSession.
 		Query().
-		Where(authsession.RefreshTokenEQ(refreshToken)).
+		Where(authsession.RefreshTokenIDEQ(refreshTokenID)).
 		Only(ctx)
 
 	if ent.IsNotFound(err) {
 		r.logger.Debug(
-			"auth session not found by refresh token",
-			zap.String("refreshToken", refreshToken),
+			"auth session not found by refresh token ID",
+			zap.String("refreshTokenID", refreshTokenID),
 		)
 		return nil, nil
 	}
 	if err != nil {
 		r.logger.Error(
-			"failed finding auth session by refresh token",
+			"failed finding auth session by refresh token ID",
 			zap.Error(err),
 		)
 		return nil, apperror.NewAppError(

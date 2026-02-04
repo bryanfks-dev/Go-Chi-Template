@@ -12,4 +12,5 @@ func RegisterHooks(client *ent.Client, sec *security.Security) {
 	}
 
 	client.User.Use(schemahook.NewHashUserPasswordHook(sec))
+	client.AuthSession.Use(schemahook.NewHashRefreshTokenHook(sec))
 }

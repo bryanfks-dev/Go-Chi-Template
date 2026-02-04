@@ -13,9 +13,11 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
+		{Name: "refresh_token_id", Type: field.TypeString, Unique: true},
 		{Name: "user_id", Type: field.TypeInt},
 		{Name: "refresh_token", Type: field.TypeString, Unique: true},
 		{Name: "user_agent", Type: field.TypeString, Size: 255},
+		{Name: "expires_at", Type: field.TypeTime},
 	}
 	// AuthSessionsTable holds the schema information for the "auth_sessions" table.
 	AuthSessionsTable = &schema.Table{
@@ -24,9 +26,9 @@ var (
 		PrimaryKey: []*schema.Column{AuthSessionsColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "authsession_user_id_refresh_token",
+				Name:    "authsession_refresh_token_id",
 				Unique:  false,
-				Columns: []*schema.Column{AuthSessionsColumns[3], AuthSessionsColumns[4]},
+				Columns: []*schema.Column{AuthSessionsColumns[3]},
 			},
 		},
 	}

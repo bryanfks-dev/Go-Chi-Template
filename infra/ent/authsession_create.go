@@ -48,6 +48,12 @@ func (_c *AuthSessionCreate) SetNillableUpdateTime(v *time.Time) *AuthSessionCre
 	return _c
 }
 
+// SetRefreshTokenID sets the "refresh_token_id" field.
+func (_c *AuthSessionCreate) SetRefreshTokenID(v string) *AuthSessionCreate {
+	_c.mutation.SetRefreshTokenID(v)
+	return _c
+}
+
 // SetUserID sets the "user_id" field.
 func (_c *AuthSessionCreate) SetUserID(v int) *AuthSessionCreate {
 	_c.mutation.SetUserID(v)
@@ -63,6 +69,12 @@ func (_c *AuthSessionCreate) SetRefreshToken(v string) *AuthSessionCreate {
 // SetUserAgent sets the "user_agent" field.
 func (_c *AuthSessionCreate) SetUserAgent(v string) *AuthSessionCreate {
 	_c.mutation.SetUserAgent(v)
+	return _c
+}
+
+// SetExpiresAt sets the "expires_at" field.
+func (_c *AuthSessionCreate) SetExpiresAt(v time.Time) *AuthSessionCreate {
+	_c.mutation.SetExpiresAt(v)
 	return _c
 }
 
@@ -119,6 +131,14 @@ func (_c *AuthSessionCreate) check() error {
 	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "AuthSession.update_time"`)}
 	}
+	if _, ok := _c.mutation.RefreshTokenID(); !ok {
+		return &ValidationError{Name: "refresh_token_id", err: errors.New(`ent: missing required field "AuthSession.refresh_token_id"`)}
+	}
+	if v, ok := _c.mutation.RefreshTokenID(); ok {
+		if err := authsession.RefreshTokenIDValidator(v); err != nil {
+			return &ValidationError{Name: "refresh_token_id", err: fmt.Errorf(`ent: validator failed for field "AuthSession.refresh_token_id": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "AuthSession.user_id"`)}
 	}
@@ -132,6 +152,9 @@ func (_c *AuthSessionCreate) check() error {
 		if err := authsession.UserAgentValidator(v); err != nil {
 			return &ValidationError{Name: "user_agent", err: fmt.Errorf(`ent: validator failed for field "AuthSession.user_agent": %w`, err)}
 		}
+	}
+	if _, ok := _c.mutation.ExpiresAt(); !ok {
+		return &ValidationError{Name: "expires_at", err: errors.New(`ent: missing required field "AuthSession.expires_at"`)}
 	}
 	return nil
 }
@@ -167,6 +190,10 @@ func (_c *AuthSessionCreate) createSpec() (*AuthSession, *sqlgraph.CreateSpec) {
 		_spec.SetField(authsession.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
+	if value, ok := _c.mutation.RefreshTokenID(); ok {
+		_spec.SetField(authsession.FieldRefreshTokenID, field.TypeString, value)
+		_node.RefreshTokenID = value
+	}
 	if value, ok := _c.mutation.UserID(); ok {
 		_spec.SetField(authsession.FieldUserID, field.TypeInt, value)
 		_node.UserID = value
@@ -178,6 +205,10 @@ func (_c *AuthSessionCreate) createSpec() (*AuthSession, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UserAgent(); ok {
 		_spec.SetField(authsession.FieldUserAgent, field.TypeString, value)
 		_node.UserAgent = value
+	}
+	if value, ok := _c.mutation.ExpiresAt(); ok {
+		_spec.SetField(authsession.FieldExpiresAt, field.TypeTime, value)
+		_node.ExpiresAt = value
 	}
 	return _node, _spec
 }
