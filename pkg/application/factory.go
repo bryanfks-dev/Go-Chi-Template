@@ -9,11 +9,11 @@ import (
 )
 
 type Application struct {
-	Environment config.Environment
-	Database    *db.Database
-	Config      *config.Config
-	Logger      *logger.Logger
-	Security    *security.Security
+	Env    config.Environment
+	Db     *db.Database
+	Cfg    *config.Config
+	Logger *logger.Logger
+	Sec    *security.Security
 }
 
 func NewApplication() *Application {
@@ -22,15 +22,15 @@ func NewApplication() *Application {
 
 	timezone.SetupTimezone(&cfg.Timezone)
 	logger := logger.NewLogger(env, &cfg.Logging)
-	security := security.NewSecurity(&cfg.Bcrypt)
+	security := security.NewSecurity(&cfg.Application, &cfg.Bcrypt, &cfg.JWT)
 
-	db := db.NewDatabase(&cfg.Database, security)
+	db := db.NewDatabase(&cfg.Database, security, env, logger)
 
 	return &Application{
-		Environment: env,
-		Database:    db,
-		Config:      cfg,
-		Logger:      logger,
-		Security:    security,
+		Env:    env,
+		Db:     db,
+		Cfg:    cfg,
+		Logger: logger,
+		Sec:    security,
 	}
 }

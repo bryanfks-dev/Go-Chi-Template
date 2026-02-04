@@ -1,4 +1,41 @@
 definitions:
+  skeleton_internal_api_auth_data_dto.PostAuthLoginRequestDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  skeleton_internal_api_auth_data_dto.PostAuthLoginResponseDTO:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user:
+        $ref: '#/definitions/skeleton_internal_api_user_data_dto.UserDTO'
+    type: object
+  skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshRequestDTO:
+    properties:
+      refresh_token:
+        type: string
+    type: object
+  skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshResponseDTO:
+    properties:
+      access_token:
+        type: string
+    type: object
+  skeleton_internal_api_user_data_dto.UserDTO:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+    type: object
   skeleton_pkg_data_dto.ErrorDto:
     properties:
       message:
@@ -12,22 +49,46 @@ definitions:
         example: false
         type: boolean
     type: object
-  skeleton_pkg_data_dto.MetaDto:
-    properties:
-      page:
-        type: integer
-      size_per_page:
-        type: integer
-      total:
-        type: integer
-    type: object
-  skeleton_pkg_data_dto.SuccessHTTPResponse-any:
+  skeleton_pkg_data_dto.HTTPResponse-any:
     properties:
       data: {}
-      meta:
-        $ref: '#/definitions/skeleton_pkg_data_dto.MetaDto'
       success:
         example: true
+        type: boolean
+    type: object
+  skeleton_pkg_data_dto.HTTPResponse-skeleton_internal_api_auth_data_dto_PostAuthLoginResponseDTO:
+    properties:
+      data:
+        $ref: '#/definitions/skeleton_internal_api_auth_data_dto.PostAuthLoginResponseDTO'
+      success:
+        example: true
+        type: boolean
+    type: object
+  skeleton_pkg_data_dto.HTTPResponse-skeleton_internal_api_auth_data_dto_PostAuthTokenRefreshResponseDTO:
+    properties:
+      data:
+        $ref: '#/definitions/skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshResponseDTO'
+      success:
+        example: true
+        type: boolean
+    type: object
+  skeleton_pkg_data_dto.ValidationError:
+    additionalProperties:
+      type: string
+    type: object
+  skeleton_pkg_data_dto.ValidationErrorDto:
+    properties:
+      detail:
+        $ref: '#/definitions/skeleton_pkg_data_dto.ValidationError'
+      message:
+        type: string
+    type: object
+  skeleton_pkg_data_dto.ValidationErrorHTTPResponse:
+    properties:
+      error:
+        $ref: '#/definitions/skeleton_pkg_data_dto.ValidationErrorDto'
+      success:
+        example: false
         type: boolean
     type: object
 info:
@@ -35,6 +96,78 @@ info:
   title: Skeleton API
   version: "1.0"
 paths:
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Endpoint to login user
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/skeleton_internal_api_auth_data_dto.PostAuthLoginRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.HTTPResponse-skeleton_internal_api_auth_data_dto_PostAuthLoginResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ValidationErrorHTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+      summary: Login Endpoint
+      tags:
+      - API / Auth
+  /api/auth/token/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Endpoint to refresh access token
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.HTTPResponse-skeleton_internal_api_auth_data_dto_PostAuthTokenRefreshResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse'
+      summary: Refresh Access Token Endpoint
+      tags:
+      - API / Auth
   /public/health:
     get:
       description: Endpoint to check the health of the service
@@ -44,7 +177,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/skeleton_pkg_data_dto.SuccessHTTPResponse-any'
+            $ref: '#/definitions/skeleton_pkg_data_dto.HTTPResponse-any'
         "500":
           description: Internal Server Error
           schema:

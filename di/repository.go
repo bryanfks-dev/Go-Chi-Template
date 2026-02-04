@@ -7,7 +7,7 @@ import (
 )
 
 type RepositoryContainer struct {
-	UserRepository *userrepository.UserRepository
+	UserRepo userrepository.UserRepository
 }
 
 var RepositorySet = wire.NewSet(

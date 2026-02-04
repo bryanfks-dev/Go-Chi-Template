@@ -7,12 +7,13 @@ import (
 )
 
 type Config struct {
-	Server   ServerProperties   `yaml:"server"`
-	Logging  LoggingProperties  `yaml:"logging"`
-	Database DatabaseProperties `yaml:"database"`
-	Bcrypt   BcryptProperties   `yaml:"bcrypt"`
-	JWT      JWTProperties      `yaml:"jwt"`
-	Timezone TimezoneProperties `yaml:"timezone"`
+	Application ApplicationProperties `yaml:"application"`
+	Server      ServerProperties      `yaml:"server"`
+	Logging     LoggingProperties     `yaml:"logging"`
+	Database    DatabaseProperties    `yaml:"database"`
+	Bcrypt      BcryptProperties      `yaml:"bcrypt"`
+	JWT         JWTProperties         `yaml:"jwt"`
+	Timezone    TimezoneProperties    `yaml:"timezone"`
 }
 
 func NewConfig(env Environment) *Config {

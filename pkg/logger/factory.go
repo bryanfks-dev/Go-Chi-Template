@@ -4,20 +4,10 @@ import (
 	"skeleton/pkg/config"
 
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 type Logger struct {
 	*zap.Logger
-}
-
-var loggerLevelMap = map[string]zapcore.Level{
-	"debug": zap.DebugLevel,
-	"info":  zap.InfoLevel,
-	"warn":  zap.WarnLevel,
-	"error": zap.ErrorLevel,
-	"panic": zap.PanicLevel,
-	"fatal": zap.FatalLevel,
 }
 
 func NewLogger(env config.Environment, cfg *config.LoggingProperties) *Logger {
@@ -33,7 +23,7 @@ func NewLogger(env config.Environment, cfg *config.LoggingProperties) *Logger {
 	}
 
 	level := zap.InfoLevel // Fallback level
-	if lvl, ok := loggerLevelMap[cfg.Level]; ok {
+	if lvl, ok := LoggerLevelMap[cfg.Level]; ok {
 		level = lvl
 	}
 	loggerConfig.Level = zap.NewAtomicLevelAt(level)

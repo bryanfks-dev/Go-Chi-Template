@@ -7,25 +7,36 @@
 package di
 
 import (
-	"skeleton/internal/api/error/delivery"
-	"skeleton/internal/api/etc/delivery"
+	"skeleton/infra/ent"
+	authdelivery "skeleton/internal/api/auth/delivery"
+	authusecase "skeleton/internal/api/auth/usecase"
+	errordelivery "skeleton/internal/api/error/delivery"
+	etcdelivery "skeleton/internal/api/etc/delivery"
+	userrepository "skeleton/internal/api/user/repository"
+	"skeleton/pkg/logger"
+	"skeleton/pkg/security"
 )
 
-// Injectors from delivery_wire.go:
+// Injectors from wire.go:
 
-func NewDeliveryContainer() *DeliveryContainer {
-	errorHandler := errordelivery.NewErrorHandler()
+func NewContainer(logger2 *logger.Logger, db *ent.Client, sec *security.Security) *Container {
 	etcHandler := etcdelivery.NewEtcHandler()
-	deliveryContainer := &DeliveryContainer{
-		ErrorHandler: errorHandler,
+	errorHandler := errordelivery.NewErrorHandler()
+	userRepository := userrepository.NewUserRepository(logger2)
+	authUsecase := authusecase.NewAuthUsecase(logger2, sec, db, userRepository)
+	authHandler := authdelivery.NewAuthHandler(authUsecase)
+	container := &Container{
 		EtcHandler:   etcHandler,
+		ErrorHandler: errorHandler,
+		AuthHandler:  authHandler,
 	}
-	return deliveryContainer
+	return container
 }
 
-// delivery_wire.go:
+// wire.go:
 
-type DeliveryContainer struct {
-	ErrorHandler *errordelivery.ErrorHandler
+type Container struct {
 	EtcHandler   *etcdelivery.EtcHandler
+	ErrorHandler *errordelivery.ErrorHandler
+	AuthHandler  *authdelivery.AuthHandler
 }

@@ -1,9 +1,5 @@
 package schema
 
-type DomainEntitySchema struct {
-	DomainName string
-}
-
-type DomainErrorsSchema struct {
+type DomainErrorSchema struct {
 	DomainName string
 }

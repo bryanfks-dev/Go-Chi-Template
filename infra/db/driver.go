@@ -7,16 +7,10 @@ const (
 	DatabaseDriverMySQL
 )
 
-var dbDriver = map[string]DatabaseDriver{
-	"postgres": DatabaseDriverPostgreSQL,
-	"mysql":    DatabaseDriverMySQL,
-}
-
 func GetDatabaseDriver(driver string) DatabaseDriver {
-	val, ok := dbDriver[driver]
+	val, ok := DbDriver[driver]
 	if !ok {
 		panic("Unsupported database driver: " + driver)
 	}
-
 	return val
 }

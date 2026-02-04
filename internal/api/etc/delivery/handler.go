@@ -13,12 +13,12 @@ import (
 // @Tags Public API / Etc
 // @Produce json
 // @Router /public/health [get]
-// @Success 200 {object} basedto.SuccessHTTPResponse[any]
+// @Success 200 {object} basedto.HTTPResponse[any]
 // @Failure 500 {object} basedto.ErrorHTTPResponse
 func (h *EtcHandler) HealthCheck(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSONResponse(
 		w,
 		http.StatusOK,
-		basedto.NewSuccessHTTPResponse(nil, nil),
+		basedto.NewHTTPResponse(nil),
 	)
 }

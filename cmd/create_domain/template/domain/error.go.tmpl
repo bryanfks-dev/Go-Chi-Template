@@ -1,0 +1,7 @@
+package {{ .DomainName | toLower }}domain
+
+import "errors"
+
+var (
+	Err{{ .DomainName | toTitle }}NotFound = errors.New("{{ .DomainName | toUpper }}_NOT_FOUND")
+)

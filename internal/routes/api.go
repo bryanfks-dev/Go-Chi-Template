@@ -1,8 +1,14 @@
 package routes
 
-import "github.com/go-chi/chi/v5"
+import (
+	authapi "skeleton/internal/api/auth"
 
-func (r Route) mountAPIRoutes() {
+	"github.com/go-chi/chi/v5"
+)
+
+func (r *Route) mountAPIRoutes() {
 	apiRouter := chi.NewRouter()
+	authapi.RegisterRoutes(apiRouter, r.container.AuthHandler)
+
 	r.srv.Router.Mount("/api", apiRouter)
 }

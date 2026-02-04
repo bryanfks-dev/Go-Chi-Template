@@ -1,73 +1,109 @@
 package security
 
 import (
-	"skeleton/infra/ent"
 	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 type JWTClaims struct {
-	Type string      `json:"type"`
-	User *UserClaims `json:"user,omitempty"`
+	Type        string `json:"typ"`
+	*UserClaims `json:"omitempty"`
 	jwt.RegisteredClaims
 }
 
 type UserClaims struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
+	Email       string   `json:"email"`
+	Role        string   `json:"role"`
+	Permissions []string `json:"permissions"`
 }
 
-func NewJWT(
-	jwtType string,
-	secret string,
-	algorithm string,
-	expiredAtMinutes int,
-	user *ent.User,
-) (*string, error) {
-	if user == nil {
-		panic("user cannot be nil")
-	}
-
-	userClaims := mapUserToUserClaims(user)
+func (s *Security) NewRefreshJWT(
+	userID int,
+) (string, error) {
+	claimsID, _ := uuid.NewV7()
 	claims := JWTClaims{
-		Type: jwtType,
-		User: userClaims,
+		Type: "refresh",
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject: user.FullName(),
-			ID:      strconv.Itoa(user.ID),
+			ID:       claimsID.String(),
+			Subject:  strconv.Itoa(userID),
+			IssuedAt: jwt.NewNumericDate(time.Now()),
+			Issuer:   s.appCfg.Name,
 			ExpiresAt: jwt.NewNumericDate(
-				time.Now().Add(time.Minute * time.Duration(expiredAtMinutes)),
+				time.Now().Add(
+					time.Minute *
+						time.Duration(s.jwtCfg.Refresh.ExpirationMinutes),
+				),
 			),
 		},
 	}
 
-	jwtAlgorithm := getJWTAlgorithm(algorithm)
-	token := jwt.NewWithClaims(jwtAlgorithm, claims)
-	tokenString, err := token.SignedString([]byte(secret))
+	hashAlgo := getJWTAlgorithm(s.jwtCfg.Algorithm)
+	token, err := jwt.
+		NewWithClaims(hashAlgo, claims).
+		SignedString([]byte(s.jwtCfg.Secret))
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return &tokenString, nil
+	return token, nil
 }
 
-func DecodeJWT(
+func (s *Security) NewAccessJWT(
+	userEmail string,
+	userRole string,
+	userPermissions *[]string,
+) (string, error) {
+	if userPermissions == nil {
+		userPermissions = &[]string{"*"}
+	}
+
+	claimsID, _ := uuid.NewV7()
+	claims := JWTClaims{
+		Type: "access",
+		UserClaims: &UserClaims{
+			Email:       userEmail,
+			Role:        userRole,
+			Permissions: *userPermissions,
+		},
+		RegisteredClaims: jwt.RegisteredClaims{
+			ID:       claimsID.String(),
+			IssuedAt: jwt.NewNumericDate(time.Now()),
+			Issuer:   s.appCfg.Name,
+			ExpiresAt: jwt.NewNumericDate(
+				time.Now().Add(
+					time.Minute *
+						time.Duration(s.jwtCfg.Access.ExpirationMinutes),
+				),
+			),
+		},
+	}
+
+	hashAlgo := getJWTAlgorithm(s.jwtCfg.Algorithm)
+	token, err := jwt.
+		NewWithClaims(hashAlgo, claims).
+		SignedString([]byte(s.jwtCfg.Secret))
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+func (s *Security) DecodeJWT(
 	token string,
-	secret string,
-	algorithm string,
 ) (*JWTClaims, error) {
-	jwtAlgorithm := getJWTAlgorithm(algorithm)
+	hashAlgo := getJWTAlgorithm(s.jwtCfg.Algorithm)
 	parsedToken, err := jwt.ParseWithClaims(
 		token,
 		&JWTClaims{},
 		func(t *jwt.Token) (any, error) {
-			if t.Method != jwtAlgorithm {
+			if t.Method != hashAlgo {
 				return nil, jwt.ErrTokenUnverifiable
 			}
-			return []byte(secret), nil
+			return []byte(s.jwtCfg.Secret), nil
 		},
 	)
 	if err != nil {
@@ -80,4 +116,12 @@ func DecodeJWT(
 	}
 
 	return claims, nil
+}
+
+func getJWTAlgorithm(algorithm string) jwt.SigningMethod {
+	val, ok := JWTAlgorithm[algorithm]
+	if !ok {
+		return jwt.SigningMethodHS256
+	}
+	return val
 }

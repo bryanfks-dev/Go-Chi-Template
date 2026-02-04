@@ -9,8 +9,10 @@ import (
 func (h *ErrorHandler) NotFound(w http.ResponseWriter, r *http.Request) {
 	utils.WriteErrorJSONResponse(
 		w,
-		http.StatusNotFound,
-		apperror.ErrRouteNotFound,
+		apperror.NewAppError(
+			http.StatusNotFound,
+			apperror.ErrRouteNotFound,
+		),
 	)
 }
 
@@ -20,7 +22,9 @@ func (h *ErrorHandler) MethodNotAllowed(
 ) {
 	utils.WriteErrorJSONResponse(
 		w,
-		http.StatusMethodNotAllowed,
-		apperror.ErrMethodNotAllowed,
+		apperror.NewAppError(
+			http.StatusMethodNotAllowed,
+			apperror.ErrMethodNotAllowed,
+		),
 	)
 }

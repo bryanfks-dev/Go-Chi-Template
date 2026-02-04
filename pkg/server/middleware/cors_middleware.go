@@ -18,8 +18,7 @@ func CORSMiddleware(
 				return true
 			}
 
-			productionOrigin := ""
-			return origin == productionOrigin
+			return origin == ProductionOrigin
 		},
 	})
 }

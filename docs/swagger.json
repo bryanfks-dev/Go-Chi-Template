@@ -6,6 +6,116 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/auth/login": {
+            "post": {
+                "description": "Endpoint to login user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API / Auth"
+                ],
+                "summary": "Login Endpoint",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_internal_api_auth_data_dto.PostAuthLoginRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.HTTPResponse-skeleton_internal_api_auth_data_dto_PostAuthLoginResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ValidationErrorHTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/token/refresh": {
+            "post": {
+                "description": "Endpoint to refresh access token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API / Auth"
+                ],
+                "summary": "Refresh Access Token Endpoint",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.HTTPResponse-skeleton_internal_api_auth_data_dto_PostAuthTokenRefreshResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.ErrorHTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/public/health": {
             "get": {
                 "description": "Endpoint to check the health of the service",
@@ -20,7 +130,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/skeleton_pkg_data_dto.SuccessHTTPResponse-any"
+                            "$ref": "#/definitions/skeleton_pkg_data_dto.HTTPResponse-any"
                         }
                     },
                     "500": {
@@ -34,6 +144,64 @@
         }
     },
     "definitions": {
+        "skeleton_internal_api_auth_data_dto.PostAuthLoginRequestDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "skeleton_internal_api_auth_data_dto.PostAuthLoginResponseDTO": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/skeleton_internal_api_user_data_dto.UserDTO"
+                }
+            }
+        },
+        "skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshRequestDTO": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshResponseDTO": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "skeleton_internal_api_user_data_dto.UserDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                }
+            }
+        },
         "skeleton_pkg_data_dto.ErrorDto": {
             "type": "object",
             "properties": {
@@ -54,30 +222,66 @@
                 }
             }
         },
-        "skeleton_pkg_data_dto.MetaDto": {
-            "type": "object",
-            "properties": {
-                "page": {
-                    "type": "integer"
-                },
-                "size_per_page": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "skeleton_pkg_data_dto.SuccessHTTPResponse-any": {
+        "skeleton_pkg_data_dto.HTTPResponse-any": {
             "type": "object",
             "properties": {
                 "data": {},
-                "meta": {
-                    "$ref": "#/definitions/skeleton_pkg_data_dto.MetaDto"
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "skeleton_pkg_data_dto.HTTPResponse-skeleton_internal_api_auth_data_dto_PostAuthLoginResponseDTO": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/skeleton_internal_api_auth_data_dto.PostAuthLoginResponseDTO"
                 },
                 "success": {
                     "type": "boolean",
                     "example": true
+                }
+            }
+        },
+        "skeleton_pkg_data_dto.HTTPResponse-skeleton_internal_api_auth_data_dto_PostAuthTokenRefreshResponseDTO": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/skeleton_internal_api_auth_data_dto.PostAuthTokenRefreshResponseDTO"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "skeleton_pkg_data_dto.ValidationError": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "skeleton_pkg_data_dto.ValidationErrorDto": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "$ref": "#/definitions/skeleton_pkg_data_dto.ValidationError"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "skeleton_pkg_data_dto.ValidationErrorHTTPResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/skeleton_pkg_data_dto.ValidationErrorDto"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": false
                 }
             }
         }

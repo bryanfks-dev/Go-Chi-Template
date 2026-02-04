@@ -31,9 +31,12 @@ start: install
 test: install
 	go test -v ./...
 
-migrate_create: install
+docs_generate: install
+	go tool swag init -d ./ -g cmd/http/main.go --parseDependency
+
+migration_generate: install
 ifeq ($(strip $(name)),)
-	echo "Error: name variable is not set. Usage: make create_migration name=<migration_name>"
+	echo "Error: name variable is not set. Usage: make migration_generate name=<migration_name>"
 	exit 1
 endif
 	$(ATLAS_PATH) migrate diff $(name) \
@@ -41,7 +44,7 @@ endif
     	--to $(ENT_SCHEMA_PATH) \
     	--dev-url $(DATABASE_DSN)
 
-migrate_apply: install
+migration_apply: install
 	$(ATLAS_PATH) migrate apply \
 		--dir $(MIGRATION_PATH) \
 		--url $(DATABASE_DSN)

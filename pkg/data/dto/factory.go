@@ -1,9 +1,14 @@
 package basedto
 
-type SuccessHTTPResponse[T any] struct {
+type HTTPResponse[T any] struct {
+	Success bool `json:"success"        example:"true"`
+	Data    T    `json:"data,omitempty"`
+}
+
+type HTTPWithPaginationResponse[T any] struct {
 	Success bool     `json:"success"        example:"true"`
 	Meta    *MetaDto `json:"meta,omitempty"`
-	Data    T        `json:"data,omitempty"`
+	Data    []T      `json:"data,omitempty"`
 }
 
 type ErrorHTTPResponse struct {
@@ -16,13 +21,20 @@ type ValidationErrorHTTPResponse struct {
 	Error   *ValidationErrorDto `json:"error"`
 }
 
-func NewSuccessHTTPResponse(
-	data any,
-	meta *MetaDto,
-) *SuccessHTTPResponse[any] {
-	return &SuccessHTTPResponse[any]{
-		Meta:    meta,
+func NewHTTPResponse(data any) *HTTPResponse[any] {
+	return &HTTPResponse[any]{
 		Success: true,
+		Data:    data,
+	}
+}
+
+func NewHTTPWithPaginationResponse[T any](
+	meta *MetaDto,
+	data []T,
+) *HTTPWithPaginationResponse[T] {
+	return &HTTPWithPaginationResponse[T]{
+		Success: true,
+		Meta:    meta,
 		Data:    data,
 	}
 }
@@ -43,7 +55,7 @@ func NewValidationErrorHTTPResponse(
 		Success: false,
 		Error: &ValidationErrorDto{
 			ErrorDto: ErrorDto{
-				Message: "validation error",
+				Message: "validation_error",
 			},
 			Detail: detail,
 		},

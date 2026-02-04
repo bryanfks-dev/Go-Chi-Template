@@ -5,7 +5,8 @@ type JWTPayloadProperties struct {
 }
 
 type JWTProperties struct {
-	Secret  string               `yaml:"secret"`
-	Access  JWTPayloadProperties `yaml:"access"`
-	Refresh JWTPayloadProperties `yaml:"refresh"`
+	Secret    string               `yaml:"secret"`
+	Algorithm string               `yaml:"algorithm"`
+	Access    JWTPayloadProperties `yaml:"access"`
+	Refresh   JWTPayloadProperties `yaml:"refresh"`
 }

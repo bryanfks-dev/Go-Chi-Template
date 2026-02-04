@@ -3,11 +3,19 @@ package security
 import "skeleton/pkg/config"
 
 type Security struct {
-	bcryptCost int
+	appCfg    *config.ApplicationProperties
+	bcryptCfg *config.BcryptProperties
+	jwtCfg    *config.JWTProperties
 }
 
-func NewSecurity(cfg *config.BcryptProperties) *Security {
+func NewSecurity(
+	appCfg *config.ApplicationProperties,
+	bcryptCfg *config.BcryptProperties,
+	jwtCfg *config.JWTProperties,
+) *Security {
 	return &Security{
-		bcryptCost: cfg.Cost,
+		appCfg:    appCfg,
+		bcryptCfg: bcryptCfg,
+		jwtCfg:    jwtCfg,
 	}
 }

@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"skeleton/cmd/create_domain/data/schema"
@@ -32,20 +33,20 @@ func main() {
 		)
 	}
 
-	DomainName := os.Args[1]
+	domainName := os.Args[1]
 	validateCreateDomainInput(
 		CreateDomainInput{
-			DomainName: DomainName,
+			DomainName: domainName,
 		},
 	)
 
-	createAPIDir(DomainName)
-	createRouteFile(DomainName)
-	createDeliveryLayerFiles(DomainName)
-	createUsecaseLayerFiles(DomainName)
-	createRepositoryLayerFiles(DomainName)
-	createDataLayerFiles(DomainName)
-	createDomainLayerDir(DomainName)
+	createAPIDir(domainName)
+	createRouteFile(domainName)
+	createDeliveryLayerFiles(domainName)
+	createUsecaseLayerFiles(domainName)
+	createRepositoryLayerFiles(domainName)
+	createDataLayerFiles(domainName)
+	createDomainLayerDir(domainName)
 }
 
 func validateCreateDomainInput(input CreateDomainInput) {
@@ -58,128 +59,133 @@ func validateCreateDomainInput(input CreateDomainInput) {
 	}
 }
 
-func createRouteFile(DomainName string) {
+func createRouteFile(domainName string) {
 	routeSchema := schema.RouteSchema{
-		DomainName: DomainName,
+		DomainName: domainName,
 	}
 	createFileFromTemplate(
 		"cmd/create_domain/template/route.go.tmpl",
-		"internal/api/"+DomainName+"/route.go",
+		"internal/api/"+domainName+"/route.go",
 		routeSchema,
 	)
 }
 
-func createDeliveryLayerFiles(DomainName string) {
-	createLayerDir(DomainName, "delivery")
+func createDeliveryLayerFiles(domainName string) {
+	createLayerDir(domainName, "delivery")
 
 	factorySchema := schema.DeliveryFactorySchema{
-		DomainName: DomainName,
+		DomainName: domainName,
 	}
 	createFileFromTemplate(
 		"cmd/create_domain/template/delivery/factory.go.tmpl",
-		"internal/api/"+DomainName+"/delivery/factory.go",
+		"internal/api/"+domainName+"/delivery/factory.go",
 		factorySchema,
 	)
 
 	handlerSchema := schema.DeliveryHandlerSchema{
-		DomainName: DomainName,
+		DomainName: domainName,
 	}
 	createFileFromTemplate(
 		"cmd/create_domain/template/delivery/handler.go.tmpl",
-		"internal/api/"+DomainName+"/delivery/handler.go",
+		"internal/api/"+domainName+"/delivery/handler.go",
 		handlerSchema,
 	)
 }
 
-func createUsecaseLayerFiles(DomainName string) {
-	createLayerDir(DomainName, "usecase")
+func createUsecaseLayerFiles(domainName string) {
+	createLayerDir(domainName, "usecase")
 
 	factorySchema := schema.UsecaseFactorySchema{
-		DomainName: DomainName,
+		DomainName: domainName,
 	}
 	createFileFromTemplate(
 		"cmd/create_domain/template/usecase/factory.go.tmpl",
-		"internal/api/"+DomainName+"/usecase/factory.go",
+		"internal/api/"+domainName+"/usecase/factory.go",
 		factorySchema,
 	)
 
 	functionSchema := schema.UsecaseFunctionSchema{
-		DomainName: DomainName,
+		DomainName: domainName,
 	}
+	usecaseFilePath := fmt.Sprintf(
+		"internal/api/%s/usecase/get_%s.go",
+		domainName,
+		domainName,
+	)
 	createFileFromTemplate(
-		"cmd/create_domain/template/usecase/read.go.tmpl",
-		"internal/api/"+DomainName+"/usecase/read.go",
+		"cmd/create_domain/template/usecase/get_domain.go.tmpl",
+		usecaseFilePath,
 		functionSchema,
 	)
 }
 
-func createRepositoryLayerFiles(DomainName string) {
-	createLayerDir(DomainName, "repository")
+func createRepositoryLayerFiles(domainName string) {
+	createLayerDir(domainName, "repository")
 
 	factorySchema := schema.RepositoryFactorySchema{
-		DomainName: DomainName,
+		DomainName: domainName,
 	}
 	createFileFromTemplate(
 		"cmd/create_domain/template/repository/factory.go.tmpl",
-		"internal/api/"+DomainName+"/repository/factory.go",
+		"internal/api/"+domainName+"/repository/factory.go",
 		factorySchema,
 	)
 
 	functionSchema := schema.RepositoryFunctionSchema{
-		DomainName: DomainName,
+		DomainName: domainName,
 	}
 	createFileFromTemplate(
 		"cmd/create_domain/template/repository/postgres.go.tmpl",
-		"internal/api/"+DomainName+"/repository/postgres.go",
+		"internal/api/"+domainName+"/repository/postgres.go",
 		functionSchema,
 	)
 }
 
-func createDataLayerFiles(DomainName string) {
-	createLayerDir(DomainName, "data")
+func createDataLayerFiles(domainName string) {
+	createLayerDir(domainName, "data")
 
 	dtoSchema := schema.DataDTOSchema{
-		DomainName: DomainName,
+		DomainName: domainName,
 	}
 	createFileFromTemplate(
 		"cmd/create_domain/template/data/dto/example.go.tmpl",
-		"internal/api/"+DomainName+"/data/dto/"+utils.ToCamel(DomainName)+".go",
+		"internal/api/"+domainName+"/data/dto/"+utils.ToCamel(domainName)+".go",
 		dtoSchema,
 	)
 	createFileFromTemplate(
 		"cmd/create_domain/template/data/dto/request.go.tmpl",
-		"internal/api/"+DomainName+"/data/dto/request.go",
+		"internal/api/"+domainName+"/data/dto/request.go",
 		dtoSchema,
 	)
 	createFileFromTemplate(
 		"cmd/create_domain/template/data/dto/response.go.tmpl",
-		"internal/api/"+DomainName+"/data/dto/response.go",
+		"internal/api/"+domainName+"/data/dto/response.go",
 		dtoSchema,
 	)
 }
 
-func createDomainLayerDir(DomainName string) {
-	createLayerDir(DomainName, "domain")
+func createDomainLayerDir(domainName string) {
+	createLayerDir(domainName, "domain")
 
-	errsSchema := schema.DomainErrorsSchema{
-		DomainName: DomainName,
+	errsSchema := schema.DomainErrorSchema{
+		DomainName: domainName,
 	}
 	createFileFromTemplate(
-		"cmd/create_domain/template/domain/errors.go.tmpl",
-		"internal/api/"+DomainName+"/domain/errors.go",
+		"cmd/create_domain/template/domain/error.go.tmpl",
+		"internal/api/"+domainName+"/domain/error.go",
 		errsSchema,
 	)
 }
 
-func createAPIDir(DomainName string) {
-	baseDirPath := "internal/api/" + DomainName
+func createAPIDir(domainName string) {
+	baseDirPath := "internal/api/" + domainName
 	if err := os.MkdirAll(baseDirPath, 0755); err != nil {
 		panic("Could not create API directory: " + err.Error())
 	}
 }
 
-func createLayerDir(DomainName string, layerName string) {
-	baseDirPath := "internal/api/" + DomainName + "/" + layerName
+func createLayerDir(domainName string, layerName string) {
+	baseDirPath := "internal/api/" + domainName + "/" + layerName
 	if err := os.MkdirAll(baseDirPath, 0755); err != nil {
 		panic("Could not create layer directory: " + err.Error())
 	}

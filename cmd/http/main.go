@@ -16,43 +16,47 @@ import (
 	"time"
 
 	_ "skeleton/docs"
-	_ "skeleton/pkg/data/dto"
 
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 )
 
 const (
 	shutdownServerTimeout = 10 * time.Second
+	databasePingTimeout   = 5 * time.Second
 )
 
 // @Title Skeleton API
 // @Version 1.0
 func main() {
 	app := application.NewApplication()
-	app.Database.Migrate()
+	ctx, cancel := context.WithTimeout(
+		context.Background(),
+		databasePingTimeout,
+	)
 	defer func() {
 		app.Logger.Info("Executing post shutdown tasks...")
 		app.CleanUp()
 	}()
 
-	ctx, cancel := signal.NotifyContext(
+	ctx, cancel = signal.NotifyContext(
 		context.Background(),
 		os.Interrupt,
 		syscall.SIGTERM,
 	)
 	defer cancel()
 
-	srv := server.NewServer(app.Config.Server, app.Logger, app.Environment)
+	srv := server.NewServer(app.Cfg.Server, app.Logger, app.Env)
+	srv.Router.Use(chimiddleware.Recoverer)
 	srv.Router.Use(chimiddleware.RequestID)
 	srv.Router.Use(middleware.ZapRequestLoggerMiddleware(app.Logger))
-	srv.Router.Use(middleware.CORSMiddleware(app.Environment))
+	srv.Router.Use(middleware.CORSMiddleware(app.Env))
 
-	deliveryContainer := di.NewDeliveryContainer()
+	container := di.NewContainer(app.Logger, app.Db.MasterClient, app.Sec)
 	routes := routes.NewRoute(
 		srv,
-		app.Environment,
+		app.Env,
 		app.Logger,
-		deliveryContainer,
+		container,
 	)
 	routes.MountRoutes()
 

@@ -9,5 +9,7 @@ CREATE TABLE "public"."users" (
   "password" character varying NOT NULL,
   PRIMARY KEY ("id")
 );
+-- Create index "user_email" to table: "users"
+CREATE INDEX "user_email" ON "public"."users" ("email");
 -- Create index "users_email_key" to table: "users"
 CREATE UNIQUE INDEX "users_email_key" ON "public"."users" ("email");
