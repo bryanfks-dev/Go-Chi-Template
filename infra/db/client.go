@@ -77,7 +77,7 @@ func newEntClient(
 ) *ent.Client {
 	drv := entsql.OpenDB(dialect, db)
 	client := ent.NewClient(ent.Driver(drv), ent.Log(func(arg ...any) {
-		logger.Info(fmt.Sprint(arg...))
+		logger.Debug(fmt.Sprint(arg...))
 	}))
 	if env == config.EnvironmentDevelopment {
 		client = client.Debug()

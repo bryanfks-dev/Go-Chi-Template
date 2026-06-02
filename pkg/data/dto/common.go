@@ -1,21 +1,21 @@
 package basedto
 
-type ValidationError map[string]string
-type Pagination struct {
-	Total       int64 `json:"total,omitempty"`
-	Page        int   `json:"page,omitempty"`
-	SizePerPage int   `json:"size_per_page,omitempty"`
+type ValidationErrorDTO map[string]string
+type PaginationResponseDTO struct {
+	TotalItems  int `json:"total_items"`
+	TotalPages  int `json:"total_pages"`
+	SizePerPage int `json:"size_per_page"`
 }
 
-type MetaDto struct {
-	*Pagination
+type MetaResponseDTO struct {
+	*PaginationResponseDTO
 }
 
-type ErrorDto struct {
+type ErrorResponseDTO struct {
 	Message string `json:"message"`
 }
 
-type ValidationErrorDto struct {
-	ErrorDto
-	Detail ValidationError `json:"detail"`
+type ValidationErrorResponseDTO struct {
+	ErrorResponseDTO
+	Detail ValidationErrorDTO `json:"detail"`
 }

@@ -2,6 +2,7 @@ package application
 
 import (
 	"skeleton/infra/db"
+	txmanager "skeleton/infra/tx_manager"
 	"skeleton/pkg/config"
 	"skeleton/pkg/logger"
 	"skeleton/pkg/security"
@@ -9,11 +10,12 @@ import (
 )
 
 type Application struct {
-	Env    config.Environment
-	Db     *db.Database
-	Cfg    *config.Config
-	Logger *logger.Logger
-	Sec    *security.Security
+	Env             config.Environment
+	Db              *db.Database
+	MasterTxManager *txmanager.TxManager
+	Cfg             *config.Config
+	Logger          *logger.Logger
+	Sec             *security.Security
 }
 
 func NewApplication() *Application {
@@ -30,12 +32,14 @@ func NewApplication() *Application {
 	)
 
 	db := db.NewDatabase(&cfg.Database, security, env, logger)
+	masterTxManager := txmanager.NewTxManager(db.MasterClient, logger)
 
 	return &Application{
-		Env:    env,
-		Db:     db,
-		Cfg:    cfg,
-		Logger: logger,
-		Sec:    security,
+		Env:             env,
+		Db:              db,
+		MasterTxManager: masterTxManager,
+		Cfg:             cfg,
+		Logger:          logger,
+		Sec:             security,
 	}
 }

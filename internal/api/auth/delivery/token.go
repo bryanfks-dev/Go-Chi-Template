@@ -4,7 +4,7 @@ import (
 	"net/http"
 	authdto "skeleton/internal/api/auth/data/dto"
 	basedto "skeleton/pkg/data/dto"
-	"skeleton/pkg/utils"
+	serverutils "skeleton/pkg/server/utils"
 
 	_ "skeleton/docs"
 )
@@ -25,8 +25,8 @@ func (h *AuthHandler) RefreshAccessToken(
 	r *http.Request,
 ) {
 	var req authdto.PostAuthTokenRefreshRequestDTO
-	if err := utils.ReadJSONRequest(r, &req); err != nil {
-		utils.WriteErrorJSONResponse(w, err)
+	if err := serverutils.ReadJSONRequest(r, &req); err != nil {
+		serverutils.WriteErrorJSONResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -35,7 +35,11 @@ func (h *AuthHandler) RefreshAccessToken(
 		req.RefreshToken,
 	)
 	if err != nil {
-		utils.WriteErrorJSONResponse(w, err)
+		serverutils.WriteErrorJSONResponse(
+			w,
+			http.StatusInternalServerError,
+			err,
+		)
 		return
 	}
 
@@ -45,5 +49,5 @@ func (h *AuthHandler) RefreshAccessToken(
 		xsrfToken,
 	)
 	res := basedto.NewHTTPResponse(resData)
-	utils.WriteJSONResponse(w, http.StatusOK, res)
+	serverutils.WriteJSONResponse(w, http.StatusOK, res)
 }

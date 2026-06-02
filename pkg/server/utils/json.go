@@ -1,4 +1,4 @@
-package utils
+package serverutils
 
 import (
 	"encoding/json"
@@ -43,8 +43,10 @@ func WriteJSONResponse(
 	w.WriteHeader(statusCode)
 	w.Header().Set("Content-Type", "application/json")
 
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		WriteErrorJSONResponse(w, err)
+	encoder := json.NewEncoder(w)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(response); err != nil {
+		WriteErrorJSONResponse(w, http.StatusInternalServerError, err)
 	}
 }
 
@@ -54,29 +56,24 @@ func WriteNoContentResponse(w http.ResponseWriter) {
 
 func WriteErrorJSONResponse(
 	w http.ResponseWriter,
+	statusCode int,
 	err error,
 ) {
 	if err == nil {
 		panic("err cannot be nil")
 	}
 
-	appErr, ok := err.(*apperror.AppError)
-	if !ok {
-		appErr = apperror.NewAppError(
-			http.StatusInternalServerError,
-			apperror.ErrInternalServer,
-		)
-	}
-
-	if appErr.Code < 400 || appErr.Code > 599 {
+	if statusCode < 400 || statusCode > 599 {
 		panic("statusCode must be between 400 and 599")
 	}
 
-	w.WriteHeader(appErr.Code)
+	w.WriteHeader(statusCode)
 	w.Header().Set("Content-Type", "application/json")
 
-	res := basedto.NewErrorHTTPResponse(appErr.Error())
-	if err := json.NewEncoder(w).Encode(res); err != nil {
+	encoder := json.NewEncoder(w)
+	encoder.SetIndent("", "  ")
+	res := basedto.NewErrorHTTPResponse(err.Error())
+	if err := encoder.Encode(res); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -102,8 +99,10 @@ func WriteValidationErrorJSONResponse(
 	w.WriteHeader(http.StatusUnprocessableEntity)
 	w.Header().Set("Content-Type", "application/json")
 
+	encoder := json.NewEncoder(w)
+	encoder.SetIndent("", "  ")
 	res := basedto.NewValidationErrorHTTPResponse(validationErr)
-	if err := json.NewEncoder(w).Encode(res); err != nil {
-		WriteErrorJSONResponse(w, err)
+	if err := encoder.Encode(res); err != nil {
+		WriteErrorJSONResponse(w, http.StatusInternalServerError, err)
 	}
 }

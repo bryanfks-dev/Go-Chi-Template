@@ -3,7 +3,7 @@ package etcdelivery
 import (
 	"net/http"
 	basedto "skeleton/pkg/data/dto"
-	"skeleton/pkg/utils"
+	serverutils "skeleton/pkg/server/utils"
 
 	_ "skeleton/docs"
 )
@@ -16,9 +16,6 @@ import (
 // @Success 200 {object} basedto.HTTPResponse[any]
 // @Failure 500 {object} basedto.ErrorHTTPResponse
 func (h *EtcHandler) HealthCheck(w http.ResponseWriter, r *http.Request) {
-	utils.WriteJSONResponse(
-		w,
-		http.StatusOK,
-		basedto.NewHTTPResponse(nil),
-	)
+	response := basedto.NewHTTPResponse(nil)
+	serverutils.WriteJSONResponse(w, http.StatusOK, response)
 }

@@ -14,7 +14,7 @@ import (
 // @Tags API / {{ .DomainName | normalize }}
 // @Produce json
 // @Router /api/{{ .DomainName | toLowerKebab }} [get]
-// @Success 200 {object} basedto.SuccessHTTPResponse[any]
+// @Success 200 {object} basedto.HTTPResponse[any]
 // @Failure 500 {object} basedto.ErrorHTTPResponse
 func (h *{{ .DomainName | toTitle }}Handler) List{{ .DomainName | toTitle }}(w http.ResponseWriter, r *http.Request) {
 	// Implementation here
@@ -22,6 +22,6 @@ func (h *{{ .DomainName | toTitle }}Handler) List{{ .DomainName | toTitle }}(w h
 	utils.WriteJSONResponse(
 		w,
 		http.StatusOK,
-		basedto.NewSuccessHTTPResponse(nil, nil),
+		basedto.NewHTTPResponse(nil),
 	)
 }

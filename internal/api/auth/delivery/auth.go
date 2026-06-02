@@ -4,7 +4,7 @@ import (
 	"net/http"
 	authdto "skeleton/internal/api/auth/data/dto"
 	basedto "skeleton/pkg/data/dto"
-	"skeleton/pkg/utils"
+	serverutils "skeleton/pkg/server/utils"
 
 	_ "skeleton/docs"
 )
@@ -23,12 +23,12 @@ import (
 // @Failure 500 {object} basedto.ErrorHTTPResponse "Internal Server Error"
 func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var req authdto.PostAuthLoginRequestDTO
-	if err := utils.ReadJSONRequest(r, &req); err != nil {
-		utils.WriteErrorJSONResponse(w, err)
+	if err := serverutils.ReadJSONRequest(r, &req); err != nil {
+		serverutils.WriteErrorJSONResponse(w, http.StatusBadRequest, err)
 		return
 	}
 	if err := req.Validate(); err != nil {
-		utils.WriteValidationErrorJSONResponse(w, err)
+		serverutils.WriteValidationErrorJSONResponse(w, err)
 		return
 	}
 
@@ -41,7 +41,11 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 			userAgent,
 		)
 	if err != nil {
-		utils.WriteErrorJSONResponse(w, err)
+		serverutils.WriteErrorJSONResponse(
+			w,
+			http.StatusInternalServerError,
+			err,
+		)
 		return
 	}
 
@@ -53,7 +57,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		xsrfToken,
 	)
 	res := basedto.NewHTTPResponse(resData)
-	utils.WriteJSONResponse(w, http.StatusOK, res)
+	serverutils.WriteJSONResponse(w, http.StatusOK, res)
 }
 
 // @Summary Logout Endpoint
@@ -70,22 +74,26 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 // @Failure 500 {object} basedto.ErrorHTTPResponse "Internal Server Error"
 func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	var req authdto.PostAuthLogoutRequestDTO
-	if err := utils.ReadJSONRequest(r, &req); err != nil {
-		utils.WriteErrorJSONResponse(w, err)
+	if err := serverutils.ReadJSONRequest(r, &req); err != nil {
+		serverutils.WriteErrorJSONResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := req.Validate(); err != nil {
-		utils.WriteValidationErrorJSONResponse(w, err)
+		serverutils.WriteValidationErrorJSONResponse(w, err)
 		return
 	}
 
 	err := h.authUc.ProcessUserLogout(r.Context(), req.RefreshToken)
 	if err != nil {
-		utils.WriteErrorJSONResponse(w, err)
+		serverutils.WriteErrorJSONResponse(
+			w,
+			http.StatusInternalServerError,
+			err,
+		)
 		return
 	}
 
 	res := basedto.NewHTTPResponse(nil)
-	utils.WriteJSONResponse(w, http.StatusOK, res)
+	serverutils.WriteJSONResponse(w, http.StatusOK, res)
 }

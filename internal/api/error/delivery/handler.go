@@ -3,28 +3,24 @@ package errordelivery
 import (
 	"net/http"
 	apperror "skeleton/pkg/error"
-	"skeleton/pkg/utils"
+	serverutils "skeleton/pkg/server/utils"
 )
 
 func (h *ErrorHandler) NotFound(w http.ResponseWriter, r *http.Request) {
-	utils.WriteErrorJSONResponse(
-		w,
-		apperror.NewAppError(
-			http.StatusNotFound,
-			apperror.ErrRouteNotFound,
-		),
+	err := apperror.NewAppError(
+		http.StatusNotFound,
+		apperror.ErrRouteNotFound,
 	)
+	serverutils.WriteErrorJSONResponse(w, http.StatusNotFound, err)
 }
 
 func (h *ErrorHandler) MethodNotAllowed(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	utils.WriteErrorJSONResponse(
-		w,
-		apperror.NewAppError(
-			http.StatusMethodNotAllowed,
-			apperror.ErrMethodNotAllowed,
-		),
+	err := apperror.NewAppError(
+		http.StatusMethodNotAllowed,
+		apperror.ErrMethodNotAllowed,
 	)
+	serverutils.WriteErrorJSONResponse(w, http.StatusMethodNotAllowed, err)
 }
