@@ -12,5 +12,5 @@ This directory contains configuration files for the Go project. These files are 
 
 - Keep configuration files organized and well-documented to facilitate easy maintenance and updates.
 - Syncronize configuration files with the deployment environment to avoid discrepancies between development, staging, and production settings.
-- After modifying configuration files, ensure to modify the `internal/config/factory.go` file to reflect the changes in the application's configuration loading mechanism.
+- After modifying configuration files, ensure to modify the `pkg/config/factory.go` file to reflect the changes in the application's configuration loading mechanism.
 - Reload or restart the service after making changes to configuration files to apply the new settings.
