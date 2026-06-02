@@ -29,8 +29,8 @@ install:
 
 schema_create: install
 ifeq ($(strip $(name)),)
-		echo "Error: name variable is not set. Usage: make schema_create name=<schema_name>"
-		exit 1
+	echo "Error: name variable is not set. Usage: make schema_create name=<schema_name>"
+	exit 1
 endif
 	go run entgo.io/ent/cmd/ent@latest --target infra/ent/schema new $(name)
 
@@ -63,9 +63,9 @@ ifeq ($(strip $(name)),)
 	exit 1
 endif
 	$(ATLAS_PATH) migrate diff $(name) \
-    	--dir $(MIGRATION_PATH) \
-    	--to $(ENT_SCHEMA_PATH) \
-    	--dev-url $(MIGRATION_DATABASE_DSN)
+		--dir $(MIGRATION_PATH) \
+		--to $(ENT_SCHEMA_PATH) \
+		--dev-url $(MIGRATION_DATABASE_DSN)
 
 migration_hash: install
 	$(ATLAS_PATH) migrate hash \
